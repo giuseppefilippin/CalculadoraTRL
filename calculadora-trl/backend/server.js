@@ -5,10 +5,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
-    res.send("Servidor da Calculadora TRL rodando!");
-});
+const calculatorRoutes = require("./routes/calculatorRoutes");
+app.use("/api", calculatorRoutes);
 
-// Iniciando o servidor na porta 5000
-const PORT = 5500;
-app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+app.listen(5500, () => console.log("Servidor rodando na porta 5500"));
