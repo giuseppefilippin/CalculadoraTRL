@@ -10,5 +10,5 @@ app.get("/", (req, res) => {
 });
 
 // Iniciando o servidor na porta 5000
-const PORT = 5000;
+const PORT = 5500;
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
