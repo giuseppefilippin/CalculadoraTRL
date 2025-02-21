@@ -4,11 +4,35 @@ function Calculator() {
   const [input1, setInput1] = useState("");
   const [input2, setInput2] = useState("");
   const [result, setResult] = useState(null);
+  const [error, setError] = useState("");
+  
+  const handleCalculate = async () => {
+    setError(""); // Limpa erros anteriores
+    setResult(null); // Reseta resultado
 
-  const handleCalculate = () => {
-    // Exemplo de cálculo simples (você pode substituir pela lógica TRL)
-    const calculation = parseFloat(input1) + parseFloat(input2);
-    setResult(calculation);
+    try {
+      const response = await fetch("http://localhost:5500/api/calcular", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ valor1: input1, valor2: input2 }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao conectar ao servidor");
+      }
+
+      const data = await response.json();
+      if (data.error) {
+        setError(data.error);
+      } else {
+        setResult(data.resultado);
+      }
+    } catch (error) {
+      console.error("Erro:", error);
+      setError("Erro ao conectar ao servidor");
+    }
   };
 
   return (
