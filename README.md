@@ -41,14 +41,14 @@ Our TRL Calculator is inspired by existing models used by governmental and resea
 ### Steps
 #### 1. Clone the Repository
 ```sh
- git clone https://github.com/your-repository/trl-calculator-react.git
+ git clone https://github.com/giuseppefilippin/trl-calculator-react.git
  cd trl-calculator-react
 ```
 
 #### 2. Install Dependencies
 ```sh
 # Install frontend dependencies
-cd frontend
+cd src
 npm install
 
 # Install backend dependencies
@@ -71,7 +71,7 @@ cd backend
 npm run dev
 
 # Start frontend
-cd ../frontend
+cd ../src
 npm start
 ```
 
