@@ -22,14 +22,14 @@ Our TRL Calculator is inspired by existing models used by governmental and resea
 
 ## Technologies Used
 ### Frontend
-- **React.js** (with Vite or Create React App)
+- **React.js** (with Vite)
 - **Tailwind CSS / Material-UI** (for styling)
 - **Axios** (for API calls)
 - **React Router** (for navigation)
 
 ### Backend
 - **Node.js** (Express framework)
-- **MongoDB / MySQL** (database options)
+- **MongoDB / MySQL** (database )
 - **JWT Authentication** (for user login, future feature)
 - **Dotenv** (for environment variables)
 
