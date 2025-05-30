@@ -1,7 +1,7 @@
 # TRL Calculator (React & Node.js)
 
 ## Overview
-The **TRL Calculator** (Technology Readiness Level Calculator) is a tool designed for our research project to assess and quantify the readiness level of technologies. This new version is built with **React.js** for the frontend and **Node.js (Express)** for the backend, utilizing **MongoDB/MySQL** for data storage.
+The **TRL Calculator** (Technology Readiness Level Calculator) is a tool designed for our research project to assess and quantify the readiness level of technologies. This new version is built with **React.js** for the frontend and **Node.js (Express)** for the backend, utilizing **Firebase** for data storage.
 
 ## Features
 - **Technology Readiness Level (TRL) Calculation** using a **weighted average** approach.
@@ -29,14 +29,14 @@ Our TRL Calculator is inspired by existing models used by governmental and resea
 
 ### Backend
 - **Node.js** (Express framework)
-- **MongoDB / MySQL** (database )
+- **Firebase** (database )
 - **JWT Authentication** (for user login, future feature)
 - **Dotenv** (for environment variables)
 
 ## Installation & Usage
 ### Prerequisites
 - **Node.js & npm** installed
-- **MongoDB (or MySQL) running locally or in the cloud**
+- **Firebase running in the cloud**
 
 ### Steps
 #### 1. Clone the Repository
