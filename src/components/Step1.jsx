@@ -135,6 +135,7 @@ function Step1({ onStart }) {
           <option value="eletronica">Eletrônica</option>
           <option value="hardware">Hardware</option>
           <option value="software">Software</option>
+          <option value="gerais">Gerais</option>
         </select>
       </div>
 

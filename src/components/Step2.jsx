@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import db from "../firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
-function getPesosPergunta(nivel, pergunta) {
+function getPesosPergunta(nivel, perguntaTexto) {
   const pesosPorNivel = {
     "TRL 1": 1.5,
     "TRL 2": 1.6,
@@ -26,9 +26,9 @@ function getPesosPergunta(nivel, pergunta) {
     baixo: ["identificado", "levantado", "definido", "iniciado"]
   };
 
-  if (palavrasChave.alto.some(p => pergunta.toLowerCase().includes(p))) pesoAjustado *= 1.3;
-  else if (palavrasChave.medio.some(p => pergunta.toLowerCase().includes(p))) pesoAjustado *= 1.1;
-  else if (palavrasChave.baixo.some(p => pergunta.toLowerCase().includes(p))) pesoAjustado *= 0.9;
+  if (palavrasChave.alto.some(p => perguntaTexto.toLowerCase().includes(p))) pesoAjustado *= 1.3;
+  else if (palavrasChave.medio.some(p => perguntaTexto.toLowerCase().includes(p))) pesoAjustado *= 1.1;
+  else if (palavrasChave.baixo.some(p => perguntaTexto.toLowerCase().includes(p))) pesoAjustado *= 0.9;
 
   return Math.round(pesoAjustado * 100) / 100;
 }
@@ -64,11 +64,12 @@ function Step2({ formData, onFinish }) {
   const salvarResultadoNoFirebase = async (notaFinal) => {
     const respostasPorNivel = trls.map((trl, trlIdx) => ({
       nivel: trl.nivel,
-      perguntas: trl.perguntas.map((pergunta, idx) => ({
-        pergunta,
+      perguntas: trl.perguntas.map((perguntaObj, idx) => ({
+        pergunta: perguntaObj.pergunta,
+        explicacao: perguntaObj.explicacao || "",
         resposta: responses[trlIdx][idx].resposta,
         comentario: responses[trlIdx][idx].comentario,
-        peso: getPesosPergunta(trl.nivel, pergunta)
+        peso: getPesosPergunta(trl.nivel, perguntaObj.pergunta)
       }))
     }));
 
@@ -99,15 +100,16 @@ function Step2({ formData, onFinish }) {
       let somaPesos = 0;
       let somaPontos = 0;
 
-      const perguntas = trl.perguntas.map((pergunta, idx) => {
-        const peso = getPesosPergunta(trl.nivel, pergunta);
+      const perguntas = trl.perguntas.map((perguntaObj, idx) => {
+        const peso = getPesosPergunta(trl.nivel, perguntaObj.pergunta);
         somaPesos += peso;
-        if (responses[i][idx].resposta === "sim") somaPontos += peso;
+        if (respostas[idx].resposta === "sim") somaPontos += peso;
 
         return {
-          pergunta,
-          resposta: responses[i][idx].resposta,
-          comentario: responses[i][idx].comentario,
+          pergunta: perguntaObj.pergunta,
+          explicacao: perguntaObj.explicacao || "",
+          resposta: respostas[idx].resposta,
+          comentario: respostas[idx].comentario,
           peso
         };
       });
@@ -146,10 +148,17 @@ function Step2({ formData, onFinish }) {
           </tr>
         </thead>
         <tbody>
-          {trlAtual?.perguntas?.map((pergunta, idx) => (
+          {trlAtual?.perguntas?.map((perguntaObj, idx) => (
             <tr key={idx}>
               <td>{idx + 1}</td>
-              <td>{pergunta}</td>
+              <td>
+                <strong>{perguntaObj.pergunta}</strong>
+                {perguntaObj.explicacao && (
+                  <p style={{ fontSize: "0.8em", color: "#666", marginTop: "4px" }}>
+                    {perguntaObj.explicacao}
+                  </p>
+                )}
+              </td>
               <td>
                 <select
                   value={respostasTrlAtual[idx]?.resposta || ""}
