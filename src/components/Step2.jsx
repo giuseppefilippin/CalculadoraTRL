@@ -1,6 +1,37 @@
 // src/components/Step2.jsx
 import { useEffect, useState } from "react";
 
+function getPesosPergunta(nivel, pergunta) {
+  const pesosPorNivel = {
+    "TRL 1": 1.5,
+    "TRL 2": 1.6,
+    "TRL 3": 1.7,
+    "TRL 4": 1.8,
+    "TRL 5": 1.9,
+    "TRL 6": 2.0,
+    "TRL 7": 2.1,
+    "TRL 8": 2.2,
+    "TRL 9": 2.3
+  };
+
+  const trlNum = nivel.split(":" )[0].trim();
+  const pesoBase = pesosPorNivel[trlNum] || 1.0;
+
+  let pesoAjustado = pesoBase;
+
+  const palavrasChave = {
+    alto: ["crítico", "crítica", "essencial", "fundamental", "segurança", "legal", "regulamentação", "LGPD", "produção"],
+    medio: ["teste", "testes", "testados", "validação", "documentação","documentado", "requisito", "funcionalidade", "desempenho"],
+    baixo: ["identificado", "levantado", "definido", "iniciado"]
+  };
+
+  if (palavrasChave.alto.some(p => pergunta.toLowerCase().includes(p))) pesoAjustado *= 1.3;
+  else if (palavrasChave.medio.some(p => pergunta.toLowerCase().includes(p))) pesoAjustado *= 1.1;
+  else if (palavrasChave.baixo.some(p => pergunta.toLowerCase().includes(p))) pesoAjustado *= 0.9;
+
+  return Math.round(pesoAjustado * 100) / 100;
+}
+
 function Step2({ formData }) {
   const [trls, setTrls] = useState([]);
   const [currentTrlIndex, setCurrentTrlIndex] = useState(0);
@@ -11,19 +42,15 @@ function Step2({ formData }) {
       try {
         const module = await import(`../perguntas/perguntas_${formData.areaSelecionada}.json`);
         const trlData = module.default;
-
-        // Inicializa respostas com base na estrutura do JSON
         const initialResponses = trlData.map((trl) =>
           trl.perguntas.map(() => ({ resposta: "", comentario: "" }))
         );
-
         setTrls(trlData);
         setResponses(initialResponses);
       } catch (error) {
         console.error("Erro ao carregar perguntas:", error);
       }
     }
-
     loadQuestions();
   }, [formData.areaSelecionada]);
 
@@ -31,6 +58,35 @@ function Step2({ formData }) {
     const updated = [...responses];
     updated[trlIdx][perguntaIdx][field] = value;
     setResponses(updated);
+  };
+
+  const calcularNotaFinal = () => {
+    const threshold = 0.8;
+    let notaFinal = 0;
+
+    for (let i = 0; i < trls.length; i++) {
+      const trl = trls[i];
+      const respostas = responses[i];
+      let somaPesos = 0;
+      let somaPontos = 0;
+
+      respostas.forEach((resp, idx) => {
+        const peso = getPesosPergunta(trl.nivel, trl.perguntas[idx]);
+        somaPesos += peso;
+        if (resp.resposta === "sim") {
+          somaPontos += peso;
+        }
+      });
+
+      const mediaPonderada = somaPontos / somaPesos;
+      if (mediaPonderada >= threshold) {
+        notaFinal = i + 1;
+      } else {
+        break;
+      }
+    }
+
+    alert(`O nível TRL calculado é: TRL ${notaFinal}`);
   };
 
   const trlAtual = trls[currentTrlIndex];
@@ -81,11 +137,10 @@ function Step2({ formData }) {
         <button disabled={currentTrlIndex === 0} onClick={() => setCurrentTrlIndex((i) => i - 1)}>
           Anterior
         </button>
-
         {currentTrlIndex < trls.length - 1 ? (
           <button onClick={() => setCurrentTrlIndex((i) => i + 1)}>Próximo</button>
         ) : (
-          <button onClick={() => alert("Fim da avaliação. Em breve: envio ao Firebase.")}>Calcular TRL</button>
+          <button onClick={calcularNotaFinal}>Calcular TRL</button>
         )}
       </div>
     </section>
