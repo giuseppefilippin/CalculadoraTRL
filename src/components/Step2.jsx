@@ -1,5 +1,7 @@
 // src/components/Step2.jsx
 import { useEffect, useState } from "react";
+import db from "../firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 function getPesosPergunta(nivel, pergunta) {
   const pesosPorNivel = {
@@ -60,6 +62,32 @@ function Step2({ formData }) {
     setResponses(updated);
   };
 
+  const salvarResultadoNoFirebase = async (notaFinal) => {
+    const respostasPorNivel = trls.map((trl, trlIdx) => ({
+      nivel: trl.nivel,
+      perguntas: trl.perguntas.map((pergunta, idx) => ({
+        pergunta,
+        resposta: responses[trlIdx][idx].resposta,
+        comentario: responses[trlIdx][idx].comentario
+      }))
+    }));
+
+    const doc = {
+      ...formData,
+      notaFinal,
+      respostasPorNivel,
+      timestamp: serverTimestamp()
+    };
+
+    try {
+      await addDoc(collection(db, "avaliacoes_trl"), doc);
+      alert("Dados salvos com sucesso no Firebase!");
+    } catch (error) {
+      console.error("Erro ao salvar no Firebase:", error);
+      alert("Erro ao salvar no Firebase.");
+    }
+  };
+
   const calcularNotaFinal = () => {
     const threshold = 0.8;
     let notaFinal = 0;
@@ -86,7 +114,7 @@ function Step2({ formData }) {
       }
     }
 
-    alert(`O nível TRL calculado é: TRL ${notaFinal}`);
+    salvarResultadoNoFirebase(notaFinal);
   };
 
   const trlAtual = trls[currentTrlIndex];
