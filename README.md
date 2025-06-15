@@ -110,19 +110,3 @@ Abra [http://localhost:5173](http://localhost:5173) para visualizar no navegador
 4. Os dados são salvos no Firestore com timestamp e detalhamento por nível.
 
 ---
-
-## 📄 Licença
-
-Este projeto está sob a licença MIT. Sinta-se livre para modificar, distribuir e usar com seus próprios dados TRL.
-
----
-
-## ✨ Contribuições
-
-Sugestões, melhorias e correções são bem-vindas! Abra uma *issue* ou envie um *pull request*.
-
----
-
-## 💡 Créditos
-
-Desenvolvido por [Seu Nome ou Equipe] com base nos critérios TRL adaptados para avaliação tecnológica aplicada.
