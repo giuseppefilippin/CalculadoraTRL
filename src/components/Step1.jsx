@@ -11,7 +11,7 @@ function Step1({ onStart }) {
     trlFinal: "",
     ambienteRelevante: "",
     ambienteOperacional: "",
-    areaSelecionada: "eletrica"
+    areaSelecionada: ""
   });
 
   const handleChange = (e) =>
