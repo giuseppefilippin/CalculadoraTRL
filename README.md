@@ -1,87 +1,12 @@
-# TRL Calculator (React & Node.js)
+# React + Vite
 
-## Overview
-The **TRL Calculator** (Technology Readiness Level Calculator) is a tool designed for our research project to assess and quantify the readiness level of technologies. This new version is built with **React.js** for the frontend and **Node.js (Express)** for the backend, utilizing **Firebase** for data storage.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Features
-- **Technology Readiness Level (TRL) Calculation** using a **weighted average** approach.
-- **Modern Web Interface** built with React.js for an interactive and seamless experience.
-- **RESTful API** powered by Node.js and Express for efficient data handling.
-- **Database Integration** with MongoDB (or MySQL as an alternative).
-- **Authentication & User Management** (planned feature for future updates).
+Currently, two official plugins are available:
 
-## Inspiration
-Our TRL Calculator is inspired by existing models used by governmental and research institutions. Here are some notable examples:
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-| Platform | Type | Link |
-|----------|------|------|
-| MCTIC (Brazil) | Website | [MCTIC TRL Calculator](https://formularios.mctic.gov.br/index.php/117963) |
-| ESA (European Space Agency) | Website | [ESA TRL Calculator](https://trlcalculator.esa.int) |
-| NSW Government (Australia) | Excel | [NSW TRL Calculator](https://www.nsw.gov.au/sites/default/files/2022-11/mvp-ventures-technology-readiness-level.xlsx%3FcontentOnly%3Dtrue) |
-| ITA/IEA (Brazil) | Excel | [ITA/IEA TRL Calculator](https://iae.dcta.mil.br/images/Calculadora_MRL_e_TRL/CalculadoraTRLIAEITA2020.xlsm) |
+## Expanding the ESLint configuration
 
-## Technologies Used
-### Frontend
-- **React.js** (with Vite)
-- **Tailwind CSS / Material-UI** (for styling)
-- **Axios** (for API calls)
-- **React Router** (for navigation)
-
-### Backend
-- **Node.js** (Express framework)
-- **Firebase** (database )
-- **JWT Authentication** (for user login, future feature)
-- **Dotenv** (for environment variables)
-
-## Installation & Usage
-### Prerequisites
-- **Node.js & npm** installed
-- **Firebase running in the cloud**
-
-### Steps
-#### 1. Clone the Repository
-```sh
- git clone https://github.com/giuseppefilippin/trl-calculator-react.git
- cd trl-calculator-react
-```
-
-#### 2. Install Dependencies
-```sh
-# Install frontend dependencies
-cd src
-npm install
-
-# Install backend dependencies
-cd ../backend
-npm install
-```
-
-#### 3. Set Up Environment Variables
-Create a `.env` file in the backend folder with the following:
-```
-PORT=5000
-DB_URI=mongodb+srv://your-db-uri OR mysql://user:password@host/database
-JWT_SECRET=your-secret-key
-```
-
-#### 4. Run the Project
-```sh
-# Start backend
-cd backend
-npm run dev
-
-# Start frontend
-cd ../src
-npm start
-```
-
-#### 5. Access the Application
-Open **http://localhost:3000** in your browser.
-
-## API Endpoints
-| Method | Endpoint | Description |
-|--------|---------|-------------|
-| GET    | /api/trl | Get all TRL entries |
-| POST   | /api/trl | Add a new TRL entry |
-| PUT    | /api/trl/:id | Update an existing TRL entry |
-| DELETE | /api/trl/:id | Delete a TRL entry |
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
