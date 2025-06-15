@@ -1,4 +1,3 @@
-// src/components/Step2.jsx
 import { useEffect, useState } from "react";
 import db from "../firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
@@ -16,14 +15,14 @@ function getPesosPergunta(nivel, pergunta) {
     "TRL 9": 2.3
   };
 
-  const trlNum = nivel.split(":" )[0].trim();
+  const trlNum = nivel.split(":")[0].trim();
   const pesoBase = pesosPorNivel[trlNum] || 1.0;
 
   let pesoAjustado = pesoBase;
 
   const palavrasChave = {
     alto: ["crítico", "crítica", "essencial", "fundamental", "segurança", "legal", "regulamentação", "LGPD", "produção"],
-    medio: ["teste", "testes", "testados", "validação", "documentação","documentado", "requisito", "funcionalidade", "desempenho"],
+    medio: ["teste", "testes", "testados", "validação", "documentação", "documentado", "requisito", "funcionalidade", "desempenho"],
     baixo: ["identificado", "levantado", "definido", "iniciado"]
   };
 
@@ -34,7 +33,7 @@ function getPesosPergunta(nivel, pergunta) {
   return Math.round(pesoAjustado * 100) / 100;
 }
 
-function Step2({ formData }) {
+function Step2({ formData, onFinish }) {
   const [trls, setTrls] = useState([]);
   const [currentTrlIndex, setCurrentTrlIndex] = useState(0);
   const [responses, setResponses] = useState([]);
@@ -68,7 +67,8 @@ function Step2({ formData }) {
       perguntas: trl.perguntas.map((pergunta, idx) => ({
         pergunta,
         resposta: responses[trlIdx][idx].resposta,
-        comentario: responses[trlIdx][idx].comentario
+        comentario: responses[trlIdx][idx].comentario,
+        peso: getPesosPergunta(trl.nivel, pergunta)
       }))
     }));
 
@@ -91,6 +91,7 @@ function Step2({ formData }) {
   const calcularNotaFinal = () => {
     const threshold = 0.8;
     let notaFinal = 0;
+    const trlsComPesos = [];
 
     for (let i = 0; i < trls.length; i++) {
       const trl = trls[i];
@@ -98,13 +99,20 @@ function Step2({ formData }) {
       let somaPesos = 0;
       let somaPontos = 0;
 
-      respostas.forEach((resp, idx) => {
-        const peso = getPesosPergunta(trl.nivel, trl.perguntas[idx]);
+      const perguntas = trl.perguntas.map((pergunta, idx) => {
+        const peso = getPesosPergunta(trl.nivel, pergunta);
         somaPesos += peso;
-        if (resp.resposta === "sim") {
-          somaPontos += peso;
-        }
+        if (responses[i][idx].resposta === "sim") somaPontos += peso;
+
+        return {
+          pergunta,
+          resposta: responses[i][idx].resposta,
+          comentario: responses[i][idx].comentario,
+          peso
+        };
       });
+
+      trlsComPesos.push({ nivel: trl.nivel, perguntas });
 
       const mediaPonderada = somaPontos / somaPesos;
       if (mediaPonderada >= threshold) {
@@ -115,6 +123,10 @@ function Step2({ formData }) {
     }
 
     salvarResultadoNoFirebase(notaFinal);
+
+    if (typeof onFinish === "function") {
+      onFinish(notaFinal, trlsComPesos);
+    }
   };
 
   const trlAtual = trls[currentTrlIndex];
