@@ -158,7 +158,6 @@ function Step2({ formData, onFinish }) {
                   <option value="">-- Selecione --</option>
                   <option value="sim">Sim</option>
                   <option value="nao">Não</option>
-                  <option value="parcial">Parcialmente</option>
                 </select>
               </td>
               <td>
