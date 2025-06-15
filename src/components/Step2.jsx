@@ -1,22 +1,24 @@
+// src/components/Step2.jsx
 import { useEffect, useState } from "react";
-import db from "../firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 function Step2({ formData }) {
-  const [questions, setQuestions] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [trls, setTrls] = useState([]);
+  const [currentTrlIndex, setCurrentTrlIndex] = useState(0);
   const [responses, setResponses] = useState([]);
-
-  const itemsPerPage = 5;
 
   useEffect(() => {
     async function loadQuestions() {
       try {
         const module = await import(`../perguntas/perguntas_${formData.areaSelecionada}.json`);
-        setQuestions(module.default);
-        setResponses(
-          module.default.map((q) => ({ id: q.id, resposta: "", comentario: "" }))
+        const trlData = module.default;
+
+        // Inicializa respostas com base na estrutura do JSON
+        const initialResponses = trlData.map((trl) =>
+          trl.perguntas.map(() => ({ resposta: "", comentario: "" }))
         );
+
+        setTrls(trlData);
+        setResponses(initialResponses);
       } catch (error) {
         console.error("Erro ao carregar perguntas:", error);
       }
@@ -25,31 +27,19 @@ function Step2({ formData }) {
     loadQuestions();
   }, [formData.areaSelecionada]);
 
-  const handleChange = (index, field, value) => {
+  const handleChange = (trlIdx, perguntaIdx, field, value) => {
     const updated = [...responses];
-    updated[index][field] = value;
+    updated[trlIdx][perguntaIdx][field] = value;
     setResponses(updated);
   };
 
-  const handleSubmit = async () => {
-    try {
-      await addDoc(collection(db, "respostas_trl"), {
-        ...formData,
-        respostas: responses,
-        timestamp: serverTimestamp(),
-      });
-      alert("Respostas salvas com sucesso no Firebase!");
-    } catch (e) {
-      console.error("Erro ao salvar no Firebase:", e);
-      alert("Erro ao salvar. Verifique o console.");
-    }
-  };
-
-  const paginated = questions.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
+  const trlAtual = trls[currentTrlIndex];
+  const respostasTrlAtual = responses[currentTrlIndex] || [];
 
   return (
     <section className="step">
-      <h2>Etapa de Avaliação</h2>
+      <h2>{trlAtual?.nivel || "Carregando TRLs..."}</h2>
+
       <table>
         <thead>
           <tr>
@@ -60,14 +50,14 @@ function Step2({ formData }) {
           </tr>
         </thead>
         <tbody>
-          {paginated.map((q, idx) => (
-            <tr key={q.id}>
-              <td>{(currentPage * itemsPerPage) + idx + 1}</td>
-              <td>{q.pergunta}</td>
+          {trlAtual?.perguntas?.map((pergunta, idx) => (
+            <tr key={idx}>
+              <td>{idx + 1}</td>
+              <td>{pergunta}</td>
               <td>
                 <select
-                  value={responses[q.id - 1]?.resposta || ""}
-                  onChange={(e) => handleChange(q.id - 1, "resposta", e.target.value)}
+                  value={respostasTrlAtual[idx]?.resposta || ""}
+                  onChange={(e) => handleChange(currentTrlIndex, idx, "resposta", e.target.value)}
                 >
                   <option value="">-- Selecione --</option>
                   <option value="sim">Sim</option>
@@ -78,8 +68,8 @@ function Step2({ formData }) {
               <td>
                 <input
                   type="text"
-                  value={responses[q.id - 1]?.comentario || ""}
-                  onChange={(e) => handleChange(q.id - 1, "comentario", e.target.value)}
+                  value={respostasTrlAtual[idx]?.comentario || ""}
+                  onChange={(e) => handleChange(currentTrlIndex, idx, "comentario", e.target.value)}
                 />
               </td>
             </tr>
@@ -88,14 +78,15 @@ function Step2({ formData }) {
       </table>
 
       <div style={{ marginTop: "20px" }}>
-        <button disabled={currentPage === 0} onClick={() => setCurrentPage(p => p - 1)}>
+        <button disabled={currentTrlIndex === 0} onClick={() => setCurrentTrlIndex((i) => i - 1)}>
           Anterior
         </button>
-        <button disabled={(currentPage + 1) * itemsPerPage >= questions.length}
-                onClick={() => setCurrentPage(p => p + 1)}>
-          Próximo
-        </button>
-        <button onClick={handleSubmit}>Calcular TRL</button>
+
+        {currentTrlIndex < trls.length - 1 ? (
+          <button onClick={() => setCurrentTrlIndex((i) => i + 1)}>Próximo</button>
+        ) : (
+          <button onClick={() => alert("Fim da avaliação. Em breve: envio ao Firebase.")}>Calcular TRL</button>
+        )}
       </div>
     </section>
   );
