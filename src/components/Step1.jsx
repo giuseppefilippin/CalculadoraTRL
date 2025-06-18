@@ -270,7 +270,7 @@ function Step1({ onStart }) {
             {/* Áreas de Avaliação - Múltipla Seleção */}
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-3">
-                O principal produto/processo do projeto envolve desenvolvimentos em:: *
+                O principal produto/processo do projeto envolve desenvolvimentos em: *
               </label>
               <div
                 className={`grid grid-cols-2 md:grid-cols-3 gap-4 p-4 border rounded-lg ${
