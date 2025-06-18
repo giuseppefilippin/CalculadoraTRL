@@ -1,5 +1,7 @@
 # 🚀 Calculadora TRL (Technology Readiness Level)
 
+🟢 **Rodando em produção:** [https://trl-calculator-18a81.web.app/](https://trl-calculator-18a81.web.app/)
+
 Uma aplicação web interativa para avaliação do nível de maturidade tecnológica (TRL) de projetos de inovação, utilizando as diretrizes TRL (de 1 a 9) e fluxos personalizados por área técnica (elétrica, eletrônica, hardware, software, geral).
 
 ## 🧰 Tecnologias Utilizadas
@@ -27,6 +29,7 @@ Uma aplicação web interativa para avaliação do nível de maturidade tecnoló
 ```
 /src
 ├── componentes
+│   ├── Header.js.       # Componente header da tela de entrada
 │   ├── Step1.jsx        # Tela de entrada dos dados iniciais
 │   ├── Step2.jsx        # Avaliação TRL interativa
 |   ├── Resultado.jsx    # Resultados com gráficos
