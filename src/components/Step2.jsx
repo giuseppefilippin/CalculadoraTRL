@@ -101,7 +101,7 @@ function Step2({ formData, onFinish }) {
         const trlsCombinados = combinarTRLs(allTrlData)
 
         const initialResponses = trlsCombinados.map((trl) =>
-          trl.perguntas.map(() => ({ resposta: "", comentario: "" })),
+          trl.perguntas.map(() => ({ resposta: "", comentario: "", explicacaoResposta: "" })),
         )
 
         setTrls(trlsCombinados)
@@ -157,6 +157,12 @@ function Step2({ formData, onFinish }) {
 
   const handleChange = (trlIdx, perguntaIdx, field, value) => {
     const updated = [...responses]
+    if (!updated[trlIdx]) {
+      updated[trlIdx] = []
+    }
+    if (!updated[trlIdx][perguntaIdx]) {
+      updated[trlIdx][perguntaIdx] = { resposta: "", comentario: "", explicacaoResposta: "" }
+    }
     updated[trlIdx][perguntaIdx][field] = value
     setResponses(updated)
   }
@@ -171,6 +177,7 @@ function Step2({ formData, onFinish }) {
         areaLabel: perguntaObj.areaLabel || "",
         resposta: responses[trlIdx][idx].resposta,
         comentario: responses[trlIdx][idx].comentario,
+        explicacaoResposta: responses[trlIdx][idx].explicacaoResposta || "",
         peso: getPesosPergunta(trl.nivel, perguntaObj.pergunta),
       })),
     }))
@@ -214,6 +221,7 @@ function Step2({ formData, onFinish }) {
           areaLabel: perguntaObj.areaLabel || "",
           resposta: respostas[idx].resposta,
           comentario: respostas[idx].comentario,
+          explicacaoResposta: respostas[idx].explicacaoResposta || "",
           peso,
         }
       })
@@ -314,7 +322,7 @@ function Step2({ formData, onFinish }) {
 
                   <div className="flex-1 space-y-4">
                     <div>
-                      <div className="flex items-center gap-2 mb-2">
+                      <div className="flex items-center gap-2 mb-4">
                         <h3 className="text-lg font-semibold text-gray-900">{perguntaObj.pergunta}</h3>
                         {perguntaObj.areaLabel && (
                           <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -322,7 +330,6 @@ function Step2({ formData, onFinish }) {
                           </span>
                         )}
                       </div>
-                      {perguntaObj.explicacao && <p className="text-sm text-gray-600">{perguntaObj.explicacao}</p>}
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -350,6 +357,38 @@ function Step2({ formData, onFinish }) {
                         />
                       </div>
                     </div>
+
+                    {/* Campo adicional para explicação quando existe */}
+                    {perguntaObj.explicacao && (
+                      <div className="mt-4 pt-4 border-t border-gray-200">
+                        <div className="flex items-center gap-2 mb-3">
+                          <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                          <span className="text-sm font-medium text-gray-700">{perguntaObj.explicacao}</span>
+                          <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                        </div>
+                        <textarea
+                          rows={4}
+                          value={respostasTrlAtual[idx]?.explicacaoResposta || ""}
+                          onChange={(e) => handleChange(currentTrlIndex, idx, "explicacaoResposta", e.target.value)}
+                          placeholder="Descreva detalhadamente sua resposta..."
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
