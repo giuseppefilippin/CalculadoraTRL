@@ -153,7 +153,7 @@ function Step1({ onStart }) {
               <textarea
                 id="produto"
                 rows={4}
-                placeholder="Descreva o produto ou processo a ser desenvolvido"
+                placeholder="Descreva o produto ou processo desenvolvido ou a ser desenvolvido"
                 value={formData.produto}
                 onChange={handleChange}
                 className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none ${
@@ -242,7 +242,7 @@ function Step1({ onStart }) {
             {/* Área de Avaliação */}
             <div className="md:col-span-2">
               <label htmlFor="areaSelecionada" className="block text-sm font-medium text-gray-700 mb-2">
-                Área de Avaliação *
+                O principal produto/processo do projeto envolve desenvolvimento de: *
               </label>
               <select
                 id="areaSelecionada"
