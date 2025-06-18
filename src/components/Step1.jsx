@@ -13,16 +13,18 @@ function Step1({ onStart }) {
     trlFinal: "",
     ambienteRelevante: "",
     ambienteOperacional: "",
-    areasSelecionadas: ["software"], // Array para múltiplas seleções
+    areasSelecionadas: ["gerais"], // Array para múltiplas seleções
   })
 
   const [errors, setErrors] = useState({})
 
-  const areas = [
-    { value: "eletrica", label: "Elétrica" },
-    { value: "eletronica", label: "Eletrônica" },
-    { value: "hardware", label: "Hardware" },
-    { value: "software", label: "Software" },
+  const areas = [ //por equanto deixar apenas perguntas gerais.
+    //{ value: "eletrica", label: "Elétrica" }, 
+    //{ value: "eletronica", label: "Eletrônica" },
+    //{ value: "hardware", label: "Hardware" },
+    //{ value: "software", label: "Software" },
+    //{ value: "materiais", label: "Materiais" },
+    //{ value: "mecanica", label: "Mecânica" },
     { value: "gerais", label: "Gerais" },
   ]
 
@@ -268,7 +270,7 @@ function Step1({ onStart }) {
             {/* Áreas de Avaliação - Múltipla Seleção */}
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-3">
-                O principal produto/processo do projeto envolve desenvolvimento de: *
+                O principal produto/processo do projeto envolve desenvolvimentos em:: *
               </label>
               <div
                 className={`grid grid-cols-2 md:grid-cols-3 gap-4 p-4 border rounded-lg ${
