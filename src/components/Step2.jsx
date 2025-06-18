@@ -68,20 +68,87 @@ function Step2({ formData, onFinish }) {
         setLoading(true)
         setError(null)
 
-        const module = await import(`../perguntas/perguntas_${formData.areaSelecionada}.json`)
-        const trlData = module.default
-        const initialResponses = trlData.map((trl) => trl.perguntas.map(() => ({ resposta: "", comentario: "" })))
-        setTrls(trlData)
+        // Carrega perguntas de múltiplas áreas
+        const allTrlData = []
+        const areasSelecionadas = formData.areasSelecionadas || [formData.areaSelecionada] // Compatibilidade com versão anterior
+
+        for (const area of areasSelecionadas) {
+          try {
+            const module = await import(`../perguntas/perguntas_${area}.json`)
+            const trlData = module.default
+
+            // Adiciona identificador da área a cada pergunta
+            const trlDataComArea = trlData.map((trl) => ({
+              ...trl,
+              perguntas: trl.perguntas.map((pergunta) => ({
+                ...pergunta,
+                area: area,
+                areaLabel: getAreaLabel(area),
+              })),
+            }))
+
+            allTrlData.push(...trlDataComArea)
+          } catch (error) {
+            console.warn(`Erro ao carregar perguntas da área ${area}:`, error)
+          }
+        }
+
+        if (allTrlData.length === 0) {
+          throw new Error("Nenhuma pergunta foi carregada")
+        }
+
+        // Combina perguntas do mesmo TRL de diferentes áreas
+        const trlsCombinados = combinarTRLs(allTrlData)
+
+        const initialResponses = trlsCombinados.map((trl) =>
+          trl.perguntas.map(() => ({ resposta: "", comentario: "" })),
+        )
+
+        setTrls(trlsCombinados)
         setResponses(initialResponses)
       } catch (error) {
         console.error("Erro ao carregar perguntas:", error)
-        setError("Erro ao carregar as perguntas. Verifique se o arquivo existe.")
+        setError("Erro ao carregar as perguntas. Verifique se os arquivos existem.")
       } finally {
         setLoading(false)
       }
     }
     loadQuestions()
-  }, [formData.areaSelecionada])
+  }, [formData.areasSelecionadas, formData.areaSelecionada])
+
+  // Função para combinar TRLs de diferentes áreas
+  const combinarTRLs = (allTrlData) => {
+    const trlMap = new Map()
+
+    allTrlData.forEach((trl) => {
+      const nivel = trl.nivel
+      if (trlMap.has(nivel)) {
+        // Combina perguntas do mesmo TRL
+        const existingTrl = trlMap.get(nivel)
+        existingTrl.perguntas.push(...trl.perguntas)
+      } else {
+        trlMap.set(nivel, { ...trl })
+      }
+    })
+
+    // Converte Map para array e ordena por TRL
+    return Array.from(trlMap.values()).sort((a, b) => {
+      const trlA = Number.parseInt(a.nivel.match(/\d+/)[0])
+      const trlB = Number.parseInt(b.nivel.match(/\d+/)[0])
+      return trlA - trlB
+    })
+  }
+
+  const getAreaLabel = (area) => {
+    const labels = {
+      eletrica: "Elétrica",
+      eletronica: "Eletrônica",
+      hardware: "Hardware",
+      software: "Software",
+      gerais: "Gerais",
+    }
+    return labels[area] || area
+  }
 
   // Scroll to top when TRL changes
   useEffect(() => {
@@ -100,6 +167,8 @@ function Step2({ formData, onFinish }) {
       perguntas: trl.perguntas.map((perguntaObj, idx) => ({
         pergunta: perguntaObj.pergunta,
         explicacao: perguntaObj.explicacao || "",
+        area: perguntaObj.area || "",
+        areaLabel: perguntaObj.areaLabel || "",
         resposta: responses[trlIdx][idx].resposta,
         comentario: responses[trlIdx][idx].comentario,
         peso: getPesosPergunta(trl.nivel, perguntaObj.pergunta),
@@ -141,6 +210,8 @@ function Step2({ formData, onFinish }) {
         return {
           pergunta: perguntaObj.pergunta,
           explicacao: perguntaObj.explicacao || "",
+          area: perguntaObj.area || "",
+          areaLabel: perguntaObj.areaLabel || "",
           resposta: respostas[idx].resposta,
           comentario: respostas[idx].comentario,
           peso,
@@ -243,7 +314,14 @@ function Step2({ formData, onFinish }) {
 
                   <div className="flex-1 space-y-4">
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">{perguntaObj.pergunta}</h3>
+                      <div className="flex items-center gap-2 mb-2">
+                        <h3 className="text-lg font-semibold text-gray-900">{perguntaObj.pergunta}</h3>
+                        {perguntaObj.areaLabel && (
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            {perguntaObj.areaLabel}
+                          </span>
+                        )}
+                      </div>
                       {perguntaObj.explicacao && <p className="text-sm text-gray-600">{perguntaObj.explicacao}</p>}
                     </div>
 
