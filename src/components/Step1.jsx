@@ -13,7 +13,7 @@ function Step1({ onStart }) {
     trlFinal: "",
     ambienteRelevante: "",
     ambienteOperacional: "",
-    areasSelecionadas: ["gerais"], // Array para múltiplas seleções
+    areasSelecionadas: [], // Array para múltiplas seleções
   })
 
   const [errors, setErrors] = useState({})
@@ -25,7 +25,7 @@ function Step1({ onStart }) {
     { value: "software", label: "Software" },
     { value: "materiais", label: "Materiais" },
     { value: "mecanica", label: "Mecânica" },
-    { value: "gerais", label: "Gerais" },
+    //{ value: "gerais", label: "Gerais" },
   ]
 
   const handleChange = (e) => {

@@ -74,7 +74,8 @@ function Step2({ formData, onFinish }) {
 
         for (const area of areasSelecionadas) {
           try {
-            const module = await import(`../perguntas/perguntas_${area}.json`)
+            //const module = await import(`../perguntas/perguntas_${area}.json`) descomentar quando tiver + perguntas
+            const module = await import(`../perguntas/perguntas_gerais.json`)
             const trlData = module.default
 
             // Adiciona identificador da área a cada pergunta
@@ -82,8 +83,8 @@ function Step2({ formData, onFinish }) {
               ...trl,
               perguntas: trl.perguntas.map((pergunta) => ({
                 ...pergunta,
-                area: area,
-                areaLabel: getAreaLabel(area),
+                //area: area,
+                //areaLabel: getAreaLabel(area), descomentar quando tiver mais perguntas
               })),
             }))
 
