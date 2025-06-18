@@ -18,13 +18,13 @@ function Step1({ onStart }) {
 
   const [errors, setErrors] = useState({})
 
-  const areas = [ //por equanto deixar apenas perguntas gerais.
-    //{ value: "eletrica", label: "Elétrica" }, 
-    //{ value: "eletronica", label: "Eletrônica" },
-    //{ value: "hardware", label: "Hardware" },
-    //{ value: "software", label: "Software" },
-    //{ value: "materiais", label: "Materiais" },
-    //{ value: "mecanica", label: "Mecânica" },
+  const areas = [
+    { value: "eletrica", label: "Elétrica" }, 
+    { value: "eletronica", label: "Eletrônica" },
+    { value: "hardware", label: "Hardware" },
+    { value: "software", label: "Software" },
+    { value: "materiais", label: "Materiais" },
+    { value: "mecanica", label: "Mecânica" },
     { value: "gerais", label: "Gerais" },
   ]
 
