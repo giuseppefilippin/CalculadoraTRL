@@ -29,7 +29,7 @@ Uma aplicação web interativa para avaliação do nível de maturidade tecnoló
 ```
 /src
 ├── componentes
-│   ├── Header.js.       # Componente header da tela de entrada
+│   ├── Header.jsx.       # Componente header da tela de entrada
 │   ├── Step1.jsx        # Tela de entrada dos dados iniciais
 │   ├── Step2.jsx        # Avaliação TRL interativa
 |   ├── Resultado.jsx    # Resultados com gráficos
