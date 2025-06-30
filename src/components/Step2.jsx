@@ -200,7 +200,7 @@ function Step2({ formData, onFinish }) {
   }
 
   const calcularNotaFinal = () => {
-    const threshold = 0.8 //0.55 funciona melhor
+    const threshold = 0.8 //0.55 funciona melhor com numero menor de perguntas (ex 5 perguntas)
     let notaFinal = 0
     const trlsComPesos = []
 
