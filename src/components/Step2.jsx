@@ -151,7 +151,6 @@ function Step2({ formData, onFinish }) {
     return labels[area] || area
   }
 
-  // Scroll to top when TRL changes
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" })
   }, [currentTrlIndex])
