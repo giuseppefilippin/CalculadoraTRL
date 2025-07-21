@@ -1,54 +1,59 @@
-import { useState } from "react";
-import Step1 from "./components/Step1";
-import Step2 from "./components/Step2";
-import Resultado from "./components/Resultado";
-import Header from "./components/header";
+"use client"
+
+import { useState } from "react"
+import Header from "./components/Header"
+import LandingPage from "./components/landing-page"
+import Step1 from "./components/Step1"
+import Step2 from "./components/Step2"
+import Resultado from "./components/Resultado"
 
 function App() {
-  const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({});
-  const [resultadoData, setResultadoData] = useState(null);
+  const [currentStep, setCurrentStep] = useState(0) // 0 = Landing, 1 = Step1, 2 = Step2, 3 = Resultado
+  const [formData, setFormData] = useState({})
+  const [resultData, setResultData] = useState(null)
 
-  const handleStart = (data) => {
-    setFormData(data);
-    setStep(2);
-  };
+  const handleLandingStart = () => {
+    setCurrentStep(1)
+  }
 
-  const handleResultado = (notaFinal, trls) => {
-    setResultadoData({ notaFinal, trls });
-    setStep(3);
-  };
+  const handleStep1Complete = (data) => {
+    setFormData(data)
+    setCurrentStep(2)
+  }
+
+  const handleStep2Complete = (notaFinal, trls) => {
+    setResultData({ notaFinal, trls })
+    setCurrentStep(3)
+  }
+
+  const handleReset = () => {
+    setCurrentStep(0)
+    setFormData({})
+    setResultData(null)
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      
-      <main className="pt-20 pb-8">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          {step === 1 && <Step1 onStart={handleStart} />}
-          {step === 2 && (
-            <Step2
-              formData={formData}
-              onFinish={handleResultado}
-            />
-          )}
-          {step === 3 && resultadoData && (
-            <Resultado
-              nomeResponsavel={formData.nomeResponsavel}
-              nomeTecnologia={formData.nomeTecnologia}
-              notaFinal={resultadoData.notaFinal}
-              trls={resultadoData.trls}
-              onReset={() => {
-                setFormData({});
-                setResultadoData(null);
-                setStep(1);
-              }}
-            />
-          )}
-        </div>
+
+      <main>
+        {currentStep === 0 && <LandingPage onStart={handleLandingStart} />}
+
+        {currentStep === 1 && <Step1 onStart={handleStep1Complete} />}
+
+        {currentStep === 2 && <Step2 formData={formData} onFinish={handleStep2Complete} />}
+
+        {currentStep === 3 && resultData && (
+          <Resultado
+            formData={formData}
+            notaFinal={resultData.notaFinal}
+            trls={resultData.trls}
+            onReset={handleReset}
+          />
+        )}
       </main>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

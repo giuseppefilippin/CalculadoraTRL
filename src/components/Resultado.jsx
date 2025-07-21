@@ -1,7 +1,9 @@
-import { Bar } from "react-chartjs-2";
-import { Chart as ChartJS, BarElement, CategoryScale, LinearScale } from "chart.js";
+"use client"
 
-ChartJS.register(BarElement, CategoryScale, LinearScale);
+import { Bar } from "react-chartjs-2"
+import { Chart as ChartJS, BarElement, CategoryScale, LinearScale } from "chart.js"
+
+ChartJS.register(BarElement, CategoryScale, LinearScale)
 
 function Resultado({ nomeResponsavel, nomeTecnologia, notaFinal, trls, onReset }) {
   const getTRLDescription = (level) => {
@@ -15,28 +17,28 @@ function Resultado({ nomeResponsavel, nomeTecnologia, notaFinal, trls, onReset }
       7: "Demonstração em ambiente operacional",
       8: "Sistema completo e qualificado",
       9: "Sistema comprovado em ambiente operacional",
-    };
-    return descriptions[level] || "Nível não definido";
-  };
+    }
+    return descriptions[level] || "Nível não definido"
+  }
 
   const getTRLColor = (level) => {
-    if (level <= 3) return "bg-red-100 text-red-800 border-red-200";
-    if (level <= 6) return "bg-yellow-100 text-yellow-800 border-yellow-200";
-    return "bg-green-100 text-green-800 border-green-200";
-  };
+    if (level <= 3) return "bg-red-100 text-red-800 border-red-200"
+    if (level <= 6) return "bg-yellow-100 text-yellow-800 border-yellow-200"
+    return "bg-green-100 text-green-800 border-green-200"
+  }
 
-  const labels = trls.map((_, i) => `TRL ${i + 1}`);
+  const labels = trls.map((_, i) => `TRL ${i + 1}`)
   const data = trls.map((trl) => {
-    let somaPesos = 0;
-    let somaPontos = 0;
+    let somaPesos = 0
+    let somaPontos = 0
 
     trl.perguntas.forEach((p) => {
-      somaPesos += p.peso;
-      if (p.resposta === "sim") somaPontos += p.peso;
-    });
+      somaPesos += p.peso
+      if (p.resposta === "sim") somaPontos += p.peso
+    })
 
-    return somaPesos > 0 ? Math.round((somaPontos / somaPesos) * 100) / 100 : 0;
-  });
+    return somaPesos > 0 ? Math.round((somaPontos / somaPesos) * 100) / 100 : 0
+  })
 
   const chartData = {
     labels,
@@ -49,7 +51,7 @@ function Resultado({ nomeResponsavel, nomeTecnologia, notaFinal, trls, onReset }
         borderWidth: 1,
       },
     ],
-  };
+  }
 
   const chartOptions = {
     responsive: true,
@@ -63,16 +65,14 @@ function Resultado({ nomeResponsavel, nomeTecnologia, notaFinal, trls, onReset }
         beginAtZero: true,
         max: 1,
         ticks: {
-          callback: function(value) {
-            return (value * 100).toFixed(0) + '%';
-          }
-        }
-      }
-    }
-  };
+          callback: (value) => (value * 100).toFixed(0) + "%",
+        },
+      },
+    },
+  }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-8 pt-24">
       {/* Header */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-8">
@@ -98,7 +98,9 @@ function Resultado({ nomeResponsavel, nomeTecnologia, notaFinal, trls, onReset }
 
             <div className="flex items-center justify-center">
               <div className="text-center">
-                <div className={`inline-flex items-center px-6 py-3 rounded-full border-2 ${getTRLColor(notaFinal)} mb-4`}>
+                <div
+                  className={`inline-flex items-center px-6 py-3 rounded-full border-2 ${getTRLColor(notaFinal)} mb-4`}
+                >
                   <span className="text-3xl font-bold mr-2">TRL {notaFinal}</span>
                 </div>
                 <h4 className="text-lg font-semibold text-gray-900 mb-2">Nível de Maturidade Alcançado</h4>
@@ -171,7 +173,12 @@ function Resultado({ nomeResponsavel, nomeTecnologia, notaFinal, trls, onReset }
           className="inline-flex items-center justify-center px-6 py-3 bg-gray-600 text-white font-medium rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
         >
           <svg className="mr-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+            />
           </svg>
           Nova Avaliação
         </button>
@@ -181,13 +188,18 @@ function Resultado({ nomeResponsavel, nomeTecnologia, notaFinal, trls, onReset }
           className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
         >
           <svg className="mr-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            />
           </svg>
           Exportar Relatório
         </button>
       </div>
     </div>
-  );
+  )
 }
 
-export default Resultado;
+export default Resultado

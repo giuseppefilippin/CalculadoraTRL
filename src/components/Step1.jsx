@@ -13,13 +13,13 @@ function Step1({ onStart }) {
     trlFinal: "",
     ambienteRelevante: "",
     ambienteOperacional: "",
-    areasSelecionadas: [], // Array para múltiplas seleções
+    areasSelecionadas: [], // Array para múltiplas seleções - inicializar como array vazio
   })
 
   const [errors, setErrors] = useState({})
 
   const areas = [
-    { value: "eletrica", label: "Elétrica" }, 
+    { value: "eletrica", label: "Elétrica" },
     { value: "eletronica", label: "Eletrônica" },
     { value: "hardware", label: "Hardware" },
     { value: "software", label: "Software" },
@@ -93,7 +93,7 @@ function Step1({ onStart }) {
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto pt-24">
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-8">
           <h2 className="text-2xl font-bold text-white mb-2">Informações Iniciais do Projeto</h2>
