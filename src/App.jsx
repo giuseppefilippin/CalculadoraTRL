@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Header from "./components/Header"
 import LandingPage from "./components/landing-page"
 import Step1 from "./components/Step1"
@@ -12,14 +12,9 @@ function App() {
   const [formData, setFormData] = useState({})
   const [resultData, setResultData] = useState(null)
 
-  // Scroll para o topo sempre que mudar de step
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  }, [currentStep])
-
   const handleLandingStart = () => {
     setCurrentStep(1)
-  }
+  } 
 
   const handleStep1Complete = (data) => {
     setFormData(data)

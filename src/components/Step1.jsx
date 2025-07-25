@@ -1,13 +1,8 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 
 function Step1({ onStart }) {
-  // Scroll para o topo quando o componente é montado
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  }, [])
-
   const [formData, setFormData] = useState({
     nomeTecnologia: "",
     status: "",

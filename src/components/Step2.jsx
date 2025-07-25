@@ -62,11 +62,6 @@ function Step2({ formData, onFinish }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  // Scroll para o topo quando o componente é montado
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  }, [])
-
   useEffect(() => {
     async function loadQuestions() {
       try {
@@ -156,7 +151,6 @@ function Step2({ formData, onFinish }) {
     return labels[area] || area
   }
 
-  // Scroll para o topo quando muda de TRL
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" })
   }, [currentTrlIndex])
