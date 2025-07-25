@@ -1,11 +1,17 @@
 "use client"
 
+import { useEffect } from "react"
 import { Bar } from "react-chartjs-2"
 import { Chart as ChartJS, BarElement, CategoryScale, LinearScale } from "chart.js"
 
 ChartJS.register(BarElement, CategoryScale, LinearScale)
 
 function Resultado({ nomeResponsavel, nomeTecnologia, notaFinal, trls, onReset }) {
+  // Scroll para o topo quando o componente é montado
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }, [])
+
   const getTRLDescription = (level) => {
     const descriptions = {
       1: "Princípios básicos observados",
