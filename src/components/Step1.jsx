@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Tooltip from "./Tooltip"
 
 function Step1({ onStart }) {
   // Scroll para o topo quando o componente é montado
@@ -32,6 +33,22 @@ function Step1({ onStart }) {
     { value: "mecanica", label: "Mecânica" },
     //{ value: "gerais", label: "Gerais" },
   ]
+
+  // Glossário de termos
+  const glossario = {
+    trlInicial:
+      "O TRL inicial representa o nível de maturidade tecnológica atual do seu projeto. Varia de 1 (pesquisa básica) a 9 (tecnologia totalmente madura).",
+    trlFinal:
+      "O TRL final é o nível de maturidade que você pretende alcançar com este projeto. Deve ser igual ou maior que o TRL inicial.",
+    ambienteRelevante:
+      "Ambiente que simula as condições reais de operação da tecnologia, mas ainda em escala controlada. Por exemplo: laboratório especializado, ambiente de testes simulado, ou instalação piloto.",
+    ambienteOperacional:
+      "Ambiente real onde a tecnologia será efetivamente utilizada pelos usuários finais. Por exemplo: fábrica, hospital, residência, veículo, ou qualquer local de uso final da tecnologia.",
+    produto:
+      "Descreva o resultado tangível do seu projeto: pode ser um produto físico, software, processo, metodologia ou serviço que será desenvolvido ou aprimorado.",
+    areas:
+      "Selecione as principais áreas técnicas envolvidas no desenvolvimento da sua tecnologia. Você pode escolher múltiplas áreas se o projeto for multidisciplinar.",
+  }
 
   const handleChange = (e) => {
     const { id, value } = e.target
@@ -181,8 +198,23 @@ function Step1({ onStart }) {
 
             {/* Produto/Processo */}
             <div className="md:col-span-2">
-              <label htmlFor="produto" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="produto" className="flex items-center text-sm font-medium text-gray-700 mb-2">
                 Produto/Processo *
+                <Tooltip content={glossario.produto} position="top">
+                  <svg
+                    className="w-4 h-4 ml-2 text-gray-400 hover:text-blue-500 transition-colors"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </Tooltip>
               </label>
               <textarea
                 id="produto"
@@ -199,8 +231,23 @@ function Step1({ onStart }) {
 
             {/* TRL Inicial */}
             <div>
-              <label htmlFor="trlInicial" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="trlInicial" className="flex items-center text-sm font-medium text-gray-700 mb-2">
                 TRL Inicial *
+                <Tooltip content={glossario.trlInicial} position="top">
+                  <svg
+                    className="w-4 h-4 ml-2 text-gray-400 hover:text-blue-500 transition-colors"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </Tooltip>
               </label>
               <input
                 type="number"
@@ -219,8 +266,23 @@ function Step1({ onStart }) {
 
             {/* TRL Final */}
             <div>
-              <label htmlFor="trlFinal" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="trlFinal" className="flex items-center text-sm font-medium text-gray-700 mb-2">
                 TRL Final *
+                <Tooltip content={glossario.trlFinal} position="top">
+                  <svg
+                    className="w-4 h-4 ml-2 text-gray-400 hover:text-blue-500 transition-colors"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </Tooltip>
               </label>
               <input
                 type="number"
@@ -239,8 +301,23 @@ function Step1({ onStart }) {
 
             {/* Ambiente Relevante */}
             <div>
-              <label htmlFor="ambienteRelevante" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="ambienteRelevante" className="flex items-center text-sm font-medium text-gray-700 mb-2">
                 Ambiente Relevante *
+                <Tooltip content={glossario.ambienteRelevante} position="top">
+                  <svg
+                    className="w-4 h-4 ml-2 text-gray-400 hover:text-blue-500 transition-colors"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </Tooltip>
               </label>
               <textarea
                 id="ambienteRelevante"
@@ -257,8 +334,23 @@ function Step1({ onStart }) {
 
             {/* Ambiente Operacional */}
             <div>
-              <label htmlFor="ambienteOperacional" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="ambienteOperacional" className="flex items-center text-sm font-medium text-gray-700 mb-2">
                 Ambiente Operacional *
+                <Tooltip content={glossario.ambienteOperacional} position="top">
+                  <svg
+                    className="w-4 h-4 ml-2 text-gray-400 hover:text-blue-500 transition-colors"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </Tooltip>
               </label>
               <textarea
                 id="ambienteOperacional"
@@ -275,8 +367,23 @@ function Step1({ onStart }) {
 
             {/* Áreas de Avaliação - Múltipla Seleção */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="flex items-center text-sm font-medium text-gray-700 mb-3">
                 O principal produto/processo do projeto envolve desenvolvimentos em: *
+                <Tooltip content={glossario.areas} position="top">
+                  <svg
+                    className="w-4 h-4 ml-2 text-gray-400 hover:text-blue-500 transition-colors"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </Tooltip>
               </label>
               <div
                 className={`grid grid-cols-2 md:grid-cols-3 gap-4 p-4 border rounded-lg ${
