@@ -214,7 +214,7 @@ function Step2({ formData, onFinish }) {
   }
 
   const calcularNotaFinal = () => {
-    const threshold = 0.55 //0.55 funciona melhor com numero menor de perguntas (ex 5 perguntas) estava 0.8
+    const threshold = 0.8 //0.55 funciona melhor com numero menor de perguntas (ex 5 perguntas)
     const trlInicial = Number.parseInt(formData.trlInicial) || 1
 
     // Começa com o TRL inicial como base mínima
@@ -265,7 +265,7 @@ function Step2({ formData, onFinish }) {
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto pt-24">
+      <div className="max-w-4xl mx-auto pt-8 pb-16">
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           <div className="p-8 text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
@@ -278,7 +278,7 @@ function Step2({ formData, onFinish }) {
 
   if (error) {
     return (
-      <div className="max-w-4xl mx-auto pt-24">
+      <div className="max-w-4xl mx-auto pt-8 pb-16">
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           <div className="p-8 text-center">
             <div className="text-red-600 mb-4">
@@ -307,7 +307,7 @@ function Step2({ formData, onFinish }) {
 
   if (trls.length === 0) {
     return (
-      <div className="max-w-4xl mx-auto pt-24">
+      <div className="max-w-4xl mx-auto pt-8 pb-16">
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           <div className="p-8 text-center">
             <div className="text-yellow-600 mb-4">
@@ -346,7 +346,7 @@ function Step2({ formData, onFinish }) {
   const trlFinal = Number.parseInt(formData.trlFinal) || 9
 
   return (
-    <div className="max-w-4xl mx-auto pt-24">
+    <div className="max-w-4xl mx-auto pt-8 pb-16">
       {/* Progress Bar */}
       <div className="mb-8">
         <div className="flex justify-between items-center mb-2">

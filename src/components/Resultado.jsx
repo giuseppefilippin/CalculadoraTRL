@@ -1,9 +1,6 @@
 "use client"
 
 import { useEffect } from "react"
-import { Chart as ChartJS, BarElement, CategoryScale, LinearScale } from "chart.js"
-
-ChartJS.register(BarElement, CategoryScale, LinearScale)
 
 function Resultado({ nomeResponsavel, nomeTecnologia, notaFinal, trls, onReset }) {
   // Scroll para o topo quando o componente é montado
@@ -32,59 +29,8 @@ function Resultado({ nomeResponsavel, nomeTecnologia, notaFinal, trls, onReset }
     return "bg-green-100 text-green-800 border-green-200"
   }
 
-  // Gera os labels corretos baseados nos TRLs reais avaliados
-  const labels = trls.map((trl) => {
-    const trlNumero = Number.parseInt(trl.nivel.match(/\d+/)[0])
-    return `TRL ${trlNumero}`
-  })
-
-  // Calcula os dados de desempenho para cada TRL
-  const data = trls.map((trl) => {
-    let somaPesos = 0
-    let somaPontos = 0
-
-    trl.perguntas.forEach((p) => {
-      somaPesos += p.peso
-      if (p.resposta === "sim") somaPontos += p.peso
-    })
-
-    return somaPesos > 0 ? somaPontos / somaPesos : 0
-  })
-
-  // Estrutura de dados para o gráfico Chart.js
-  const chartData = {
-    labels,
-    datasets: [
-      {
-        label: "Desempenho por TRL",
-        data,
-        backgroundColor: "rgba(59, 130, 246, 0.6)",
-        borderColor: "rgba(59, 130, 246, 1)",
-        borderWidth: 1,
-      },
-    ],
-  }
-
-  const chartOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        display: false,
-      },
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-        max: 1,
-        ticks: {
-          callback: (value) => (value * 100).toFixed(0) + "%",
-        },
-      },
-    },
-  }
-
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pt-24">
+    <div className="max-w-4xl mx-auto space-y-8 pt-8 pb-16">
       {/* Header */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-8">

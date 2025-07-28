@@ -1,8 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 function Step1({ onStart }) {
+  // Scroll para o topo quando o componente é montado
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }, [])
+
   const [formData, setFormData] = useState({
     nomeTecnologia: "",
     status: "",
@@ -93,7 +98,7 @@ function Step1({ onStart }) {
   }
 
   return (
-    <div className="max-w-4xl mx-auto pt-24">
+    <div className="max-w-4xl mx-auto pt-8 pb-16">
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-8">
           <h2 className="text-2xl font-bold text-white mb-2">Informações Iniciais do Projeto</h2>
