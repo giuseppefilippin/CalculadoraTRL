@@ -1,11 +1,16 @@
 "use client"
 
-import { Bar } from "react-chartjs-2"
+import { useEffect } from "react"
 import { Chart as ChartJS, BarElement, CategoryScale, LinearScale } from "chart.js"
 
 ChartJS.register(BarElement, CategoryScale, LinearScale)
 
 function Resultado({ nomeResponsavel, nomeTecnologia, notaFinal, trls, onReset }) {
+  // Scroll para o topo quando o componente é montado
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }, [])
+
   const getTRLDescription = (level) => {
     const descriptions = {
       1: "Princípios básicos observados",
@@ -27,7 +32,13 @@ function Resultado({ nomeResponsavel, nomeTecnologia, notaFinal, trls, onReset }
     return "bg-green-100 text-green-800 border-green-200"
   }
 
-  const labels = trls.map((_, i) => `TRL ${i + 1}`)
+  // Gera os labels corretos baseados nos TRLs reais avaliados
+  const labels = trls.map((trl) => {
+    const trlNumero = Number.parseInt(trl.nivel.match(/\d+/)[0])
+    return `TRL ${trlNumero}`
+  })
+
+  // Calcula os dados de desempenho para cada TRL
   const data = trls.map((trl) => {
     let somaPesos = 0
     let somaPontos = 0
@@ -37,9 +48,10 @@ function Resultado({ nomeResponsavel, nomeTecnologia, notaFinal, trls, onReset }
       if (p.resposta === "sim") somaPontos += p.peso
     })
 
-    return somaPesos > 0 ? Math.round((somaPontos / somaPesos) * 100) / 100 : 0
+    return somaPesos > 0 ? somaPontos / somaPesos : 0
   })
 
+  // Estrutura de dados para o gráfico Chart.js
   const chartData = {
     labels,
     datasets: [
@@ -119,8 +131,34 @@ function Resultado({ nomeResponsavel, nomeTecnologia, notaFinal, trls, onReset }
         </div>
 
         <div className="p-6">
-          <div className="h-64">
-            <Bar data={chartData} options={chartOptions} />
+          <div className="space-y-4">
+            {trls.map((trl, index) => {
+              const trlNumero = Number.parseInt(trl.nivel.match(/\d+/)[0])
+              let somaPesos = 0
+              let somaPontos = 0
+
+              trl.perguntas.forEach((p) => {
+                somaPesos += p.peso
+                if (p.resposta === "sim") somaPontos += p.peso
+              })
+
+              const score = somaPesos > 0 ? Math.round((somaPontos / somaPesos) * 100) : 0
+
+              return (
+                <div key={index} className="flex items-center space-x-4">
+                  <div className="w-16 text-sm font-medium text-gray-700">TRL {trlNumero}</div>
+                  <div className="flex-1">
+                    <div className="w-full bg-gray-200 rounded-full h-3">
+                      <div
+                        className="bg-blue-600 h-3 rounded-full transition-all duration-500"
+                        style={{ width: `${score}%` }}
+                      />
+                    </div>
+                  </div>
+                  <div className="w-16 text-sm text-gray-600 text-right">{score}%</div>
+                </div>
+              )
+            })}
           </div>
         </div>
       </div>

@@ -214,7 +214,7 @@ function Step2({ formData, onFinish }) {
   }
 
   const calcularNotaFinal = () => {
-    const threshold = 0.8 //0.55 funciona melhor com numero menor de perguntas (ex 5 perguntas)
+    const threshold = 0.55 //0.55 funciona melhor com numero menor de perguntas (ex 5 perguntas) estava 0.8
     const trlInicial = Number.parseInt(formData.trlInicial) || 1
 
     // Começa com o TRL inicial como base mínima
