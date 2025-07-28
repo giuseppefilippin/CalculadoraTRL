@@ -136,6 +136,7 @@ function Step1({ onStart }) {
                 <option value="">-- Selecione --</option>
                 <option value="Concluído">Concluído</option>
                 <option value="Proposto">Proposto</option>
+                <option value="Em andamento">Em andamento</option>
               </select>
               {errors.status && <p className="mt-1 text-sm text-red-600">{errors.status}</p>}
             </div>
