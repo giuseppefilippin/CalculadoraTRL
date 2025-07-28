@@ -62,6 +62,11 @@ function Step2({ formData, onFinish }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
+  // Scroll para o topo quando o componente é montado
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }, [])
+
   useEffect(() => {
     async function loadQuestions() {
       try {
@@ -101,11 +106,20 @@ function Step2({ formData, onFinish }) {
         // Combina perguntas do mesmo TRL de diferentes áreas
         const trlsCombinados = combinarTRLs(allTrlData)
 
-        const initialResponses = trlsCombinados.map((trl) =>
+        // Filtra TRLs baseado no TRL inicial informado
+        const trlInicial = Number.parseInt(formData.trlInicial) || 1
+        const trlFinal = Number.parseInt(formData.trlFinal) || 9
+
+        const trlsFiltrados = trlsCombinados.filter((trl) => {
+          const trlNumero = Number.parseInt(trl.nivel.match(/\d+/)[0])
+          return trlNumero >= trlInicial && trlNumero <= trlFinal
+        })
+
+        const initialResponses = trlsFiltrados.map((trl) =>
           trl.perguntas.map(() => ({ resposta: "", comentario: "", explicacaoResposta: "" })),
         )
 
-        setTrls(trlsCombinados)
+        setTrls(trlsFiltrados)
         setResponses(initialResponses)
       } catch (error) {
         console.error("Erro ao carregar perguntas:", error)
@@ -115,7 +129,7 @@ function Step2({ formData, onFinish }) {
       }
     }
     loadQuestions()
-  }, [formData.areasSelecionadas, formData.areaSelecionada])
+  }, [formData.areasSelecionadas, formData.areaSelecionada, formData.trlInicial, formData.trlFinal])
 
   // Função para combinar TRLs de diferentes áreas
   const combinarTRLs = (allTrlData) => {
@@ -151,6 +165,7 @@ function Step2({ formData, onFinish }) {
     return labels[area] || area
   }
 
+  // Scroll para o topo quando muda de TRL
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" })
   }, [currentTrlIndex])
@@ -200,7 +215,10 @@ function Step2({ formData, onFinish }) {
 
   const calcularNotaFinal = () => {
     const threshold = 0.8 //0.55 funciona melhor com numero menor de perguntas (ex 5 perguntas)
-    let notaFinal = 0
+    const trlInicial = Number.parseInt(formData.trlInicial) || 1
+
+    // Começa com o TRL inicial como base mínima
+    let notaFinal = trlInicial
     const trlsComPesos = []
 
     for (let i = 0; i < trls.length; i++) {
@@ -230,7 +248,9 @@ function Step2({ formData, onFinish }) {
 
       const mediaPonderada = somaPontos / somaPesos
       if (mediaPonderada >= threshold) {
-        notaFinal = i + 1
+        // Calcula o TRL baseado no número do TRL atual, não no índice
+        const trlAtualNumero = Number.parseInt(trl.nivel.match(/\d+/)[0])
+        notaFinal = trlAtualNumero
       } else {
         break
       }
@@ -285,9 +305,45 @@ function Step2({ formData, onFinish }) {
     )
   }
 
+  if (trls.length === 0) {
+    return (
+      <div className="max-w-4xl mx-auto pt-24">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div className="p-8 text-center">
+            <div className="text-yellow-600 mb-4">
+              <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
+                />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Nenhuma Pergunta Encontrada</h3>
+            <p className="text-gray-600 mb-4">
+              Não há perguntas disponíveis para o intervalo de TRL {formData.trlInicial} a {formData.trlFinal}.
+            </p>
+            <button
+              onClick={() => window.history.back()}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Voltar
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   const trlAtual = trls[currentTrlIndex]
   const respostasTrlAtual = responses[currentTrlIndex] || []
   const progress = ((currentTrlIndex + 1) / trls.length) * 100
+
+  // Obter o número do TRL atual para exibição
+  const trlAtualNumero = Number.parseInt(trlAtual?.nivel.match(/\d+/)[0])
+  const trlInicial = Number.parseInt(formData.trlInicial) || 1
+  const trlFinal = Number.parseInt(formData.trlFinal) || 9
 
   return (
     <div className="max-w-4xl mx-auto pt-24">
@@ -296,11 +352,18 @@ function Step2({ formData, onFinish }) {
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm font-medium text-gray-700">Progresso da Avaliação</span>
           <span className="text-sm text-gray-500">
-            {currentTrlIndex + 1} de {trls.length}
+            TRL {trlAtualNumero} ({currentTrlIndex + 1} de {trls.length})
           </span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2">
           <div className="bg-blue-600 h-2 rounded-full transition-all duration-300" style={{ width: `${progress}%` }} />
+        </div>
+
+        {/* Indicador de intervalo TRL */}
+        <div className="mt-2 text-center">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+            Avaliando TRL {trlInicial} até TRL {trlFinal}
+          </span>
         </div>
       </div>
 
