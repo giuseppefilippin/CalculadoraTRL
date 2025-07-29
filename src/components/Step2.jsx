@@ -103,6 +103,19 @@ function Step2({ formData, onFinish }) {
       "A capacidade de replicar o desenvolvimento ou a aplicação da tecnologia com os mesmos resultados e requisitos.",
   }
 
+  // Explicações para cada nível TRL
+  const trlExplanations = {
+    1: "Neste nível, o foco é na pesquisa fundamental. As perguntas buscam verificar se os princípios científicos básicos foram identificados e se há uma base teórica sólida para a tecnologia.",
+    2: "Aqui, o conceito tecnológico começa a tomar forma. As perguntas abordam a formulação clara do conceito e a identificação das suas potenciais aplicações e funcionalidades.",
+    3: "Este nível foca na prova de conceito experimental. As perguntas verificam se experimentos iniciais foram realizados para validar o conceito em laboratório e se o projeto conceitual está documentado.",
+    4: "A validação de componentes em ambiente laboratorial é o objetivo. As perguntas investigam se os componentes individuais foram testados, se os GAPs tecnológicos foram identificados e se os requisitos gerais do sistema foram estabelecidos.",
+    5: "Neste nível, o sistema é validado em um ambiente relevante. As perguntas abordam a definição de requisitos de desempenho em ambiente relevante, o projeto preliminar e a análise de falhas.",
+    6: "A demonstração do sistema em ambiente relevante é o foco. As perguntas verificam a identificação e análise de funções críticas, a definição do ambiente relevante de funcionamento e os testes do protótipo completo.",
+    7: "Este nível envolve a demonstração do protótipo em um ambiente realista. As perguntas abordam a definição do ambiente operacional, testes de interface, simulações de funcionalidades e a integração do protótipo.",
+    8: "A certificação do sistema completo é o objetivo. As perguntas investigam a construção e integração do modelo final, ajustes de componentes, testes de usabilidade e documentação formal de regulamentação.",
+    9: "Nível final, onde o sistema está operacional e em produção em escala. As perguntas verificam a demonstração plena em operação, a implementação do conceito operacional, processos de fabricação e publicações/patentes.",
+  }
+
   // Função para renderizar o texto da pergunta com tooltips para termos específicos
   const renderQuestionWithTooltips = (questionText) => {
     let parts = [questionText]
@@ -314,8 +327,8 @@ function Step2({ formData, onFinish }) {
           explicacao: perguntaObj.explicacao || "",
           area: perguntaObj.area || "",
           areaLabel: perguntaObj.areaLabel || "",
-          resposta: responses[idx].resposta,
-          comentario: responses[idx].comentario,
+          resposta: respostas[idx].resposta,
+          comentario: respostas[idx].comentario,
           explicacaoResposta: respostas[idx].explicacaoResposta || "",
           peso,
         }
@@ -452,6 +465,12 @@ function Step2({ formData, onFinish }) {
         </div>
 
         <div className="p-6">
+          {/* Nova explicação para o TRL atual */}
+          {trlAtualNumero && trlExplanations[trlAtualNumero] && (
+            <p className="text-gray-700 mb-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
+              <span className="font-semibold text-blue-800">Sobre este TRL:</span> {trlExplanations[trlAtualNumero]}
+            </p>
+          )}
           <div className="space-y-6">
             {trlAtual?.perguntas?.map((perguntaObj, idx) => (
               <div key={idx} className="bg-gray-50 rounded-lg p-6 border border-gray-200">
@@ -571,7 +590,7 @@ function Step2({ formData, onFinish }) {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                    d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 002 2v14a2 2 0 002 2z"
                   />
                 </svg>
                 Calcular TRL
