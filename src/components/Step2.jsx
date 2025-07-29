@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import db from "../firebase"
 import { collection, addDoc, serverTimestamp } from "firebase/firestore"
+import Tooltip from "./Tooltip" // Importar o componente Tooltip
 
 function getPesosPergunta(nivel, perguntaTexto) {
   const pesosPorNivel = {
@@ -62,9 +63,85 @@ function Step2({ formData, onFinish }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
+  // Glossário para termos dentro das perguntas
+  const inQuestionGlossary = {
+    "princípios teóricos e físicos":
+      "Fundamentos científicos e leis da natureza que explicam o funcionamento da tecnologia.",
+    "restrições legais e normativas":
+      "Leis, regulamentos, padrões e normas técnicas que a tecnologia deve cumprir para ser desenvolvida, produzida ou comercializada.",
+    "riscos técnicos e desafios":
+      "Obstáculos ou incertezas de engenharia, design ou implementação que podem comprometer o sucesso do projeto.",
+    "funções críticas":
+      "As funcionalidades essenciais e indispensáveis do produto/processo, cujo mau funcionamento comprometeria a aplicação principal da tecnologia.",
+    GAPs: "Lacunas ou deficiências no conhecimento, tecnologia ou recursos que precisam ser preenchidas para o avanço do projeto.",
+    "ambiente relevante":
+      "Um ambiente de teste que simula as condições reais de operação da tecnologia, mas em escala controlada ou com simplificações.",
+    "ambiente operacional":
+      "O ambiente real onde a tecnologia será utilizada, com todas as suas complexidades e interações.",
+    "modelo representativo $$protótipo$$":
+      "Uma versão funcional (real ou em escala) do sistema ou subsistema, construída para testes e demonstrações.",
+    "documentação formal de regulamentação":
+      "Documentos oficiais exigidos por órgãos reguladores para certificar a conformidade e segurança da tecnologia.",
+    "gestão e controle de configuração":
+      "Processos para gerenciar e rastrear mudanças no design, desenvolvimento e operação da tecnologia.",
+    "produção em escala":
+      "A capacidade de fabricar ou implementar a tecnologia em grandes volumes, de forma eficiente e consistente.",
+    "viabilidade teórica":
+      "A possibilidade de a tecnologia funcionar com base em princípios científicos e análises, antes de qualquer experimentação prática.",
+    "requisitos de desempenho":
+      "Critérios específicos que definem quão bem a tecnologia deve funcionar, como velocidade, precisão, capacidade, etc.",
+    "requisitos de interface":
+      "Especificações sobre como a tecnologia interage com outros sistemas, usuários ou o ambiente.",
+    "interações entre os componentes/subsistemas":
+      "Como as diferentes partes da tecnologia se comunicam e trabalham juntas.",
+    "modelo final": "A versão completa e otimizada da tecnologia, pronta para implantação ou comercialização.",
+    "sistema operacional": "O ambiente de uso final da tecnologia, onde ela opera em condições reais.",
+    usabilidade: "A facilidade com que os usuários podem aprender a usar, operar e interagir com a tecnologia.",
+    "publicações científicas e/ou patentes":
+      "Registros formais do conhecimento e da propriedade intelectual da tecnologia.",
+    "reproduzir o mesmo projeto":
+      "A capacidade de replicar o desenvolvimento ou a aplicação da tecnologia com os mesmos resultados e requisitos.",
+  }
+
+  // Função para renderizar o texto da pergunta com tooltips para termos específicos
+  const renderQuestionWithTooltips = (questionText) => {
+    let parts = [questionText]
+
+    Object.entries(inQuestionGlossary).forEach(([term, definition]) => {
+      const newParts = []
+      const regex = new RegExp(`(${term.replace(/\\$$|\\$$/g, (match) => `\\${match}`)})`, "gi") // Escapa parênteses para regex
+
+      parts.forEach((part, partIndex) => {
+        if (typeof part === "string") {
+          const split = part.split(regex)
+          split.forEach((subPart, i) => {
+            if (i % 2 === 1) {
+              // É um termo correspondente
+              newParts.push(
+                <Tooltip key={`${term}-${partIndex}-${i}`} content={definition} position="top">
+                  <span className="underline decoration-dotted cursor-help">{subPart}</span>
+                </Tooltip>,
+              )
+            } else {
+              newParts.push(subPart)
+            }
+          })
+        } else {
+          newParts.push(part) // Já é um elemento React (ex: outro Tooltip)
+        }
+      })
+      parts = newParts
+    })
+    return parts
+  }
+
   // Scroll para o topo quando o componente é montado
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" })
+    window.scrollTo(0, 0)
+    const timer = setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    }, 100)
+    return () => clearTimeout(timer)
   }, [])
 
   useEffect(() => {
@@ -237,8 +314,8 @@ function Step2({ formData, onFinish }) {
           explicacao: perguntaObj.explicacao || "",
           area: perguntaObj.area || "",
           areaLabel: perguntaObj.areaLabel || "",
-          resposta: respostas[idx].resposta,
-          comentario: respostas[idx].comentario,
+          resposta: responses[idx].resposta,
+          comentario: responses[idx].comentario,
           explicacaoResposta: respostas[idx].explicacaoResposta || "",
           peso,
         }
@@ -386,7 +463,9 @@ function Step2({ formData, onFinish }) {
                   <div className="flex-1 space-y-4">
                     <div>
                       <div className="flex items-center gap-2 mb-4">
-                        <h3 className="text-lg font-semibold text-gray-900">{perguntaObj.pergunta}</h3>
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          {renderQuestionWithTooltips(perguntaObj.pergunta)}
+                        </h3>
                         {perguntaObj.areaLabel && (
                           <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                             {perguntaObj.areaLabel}
@@ -425,23 +504,22 @@ function Step2({ formData, onFinish }) {
                     {perguntaObj.explicacao && (
                       <div className="mt-4 pt-4 border-t border-gray-200">
                         <div className="flex items-center gap-2 mb-3">
-                          <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                          </svg>
-                          <span className="text-sm font-medium text-gray-700">{perguntaObj.explicacao}</span>
-                          <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                          </svg>
+                          <Tooltip content={perguntaObj.explicacao} position="top">
+                            <svg
+                              className="w-4 h-4 text-blue-600 hover:text-blue-500 transition-colors cursor-help"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                              />
+                            </svg>
+                          </Tooltip>
+                          <span className="text-sm font-medium text-gray-700">Explicação:</span>
                         </div>
                         <textarea
                           rows={4}
@@ -493,7 +571,7 @@ function Step2({ formData, onFinish }) {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 002 2z"
+                    d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
                   />
                 </svg>
                 Calcular TRL
