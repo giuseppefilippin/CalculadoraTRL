@@ -163,38 +163,28 @@ function Step2({ formData, onFinish }) {
         setLoading(true)
         setError(null)
 
-        // Carrega perguntas de múltiplas áreas
-        const allTrlData = []
-        const areasSelecionadas = formData.areasSelecionadas || [formData.areaSelecionada] // Compatibilidade com versão anterior
+        // Carrega perguntas gerais apenas UMA VEZ
+        const module = await import(`../perguntas/perguntas_gerais.json`)
+        const trlData = module.default
 
-        for (const area of areasSelecionadas) {
-          try {
-            //const module = await import(`../perguntas/perguntas_${area}.json`) descomentar quando tiver + perguntas
-            const module = await import(`../perguntas/perguntas_gerais.json`)
-            const trlData = module.default
+        // Adiciona identificador de área 'gerais' a cada pergunta, pois são perguntas gerais
+        const trlDataComArea = trlData.map((trl) => ({
+          ...trl,
+          perguntas: trl.perguntas.map((pergunta) => ({
+            ...pergunta,
+            area: "gerais", // Atribui 'gerais' como a área
+            areaLabel: getAreaLabel("gerais"), // Atribui 'Gerais' como o rótulo
+          })),
+        }))
 
-            // Adiciona identificador da área a cada pergunta
-            const trlDataComArea = trlData.map((trl) => ({
-              ...trl,
-              perguntas: trl.perguntas.map((pergunta) => ({
-                ...pergunta,
-                //area: area,
-                //areaLabel: getAreaLabel(area), descomentar quando tiver mais perguntas
-              })),
-            }))
-
-            allTrlData.push(...trlDataComArea)
-          } catch (error) {
-            console.warn(`Erro ao carregar perguntas da área ${area}:`, error)
-          }
-        }
-
-        if (allTrlData.length === 0) {
+        if (trlDataComArea.length === 0) {
           throw new Error("Nenhuma pergunta foi carregada")
         }
 
-        // Combina perguntas do mesmo TRL de diferentes áreas
-        const trlsCombinados = combinarTRLs(allTrlData)
+        // Combina TRLs (isso também os ordenará)
+        // Esta função é útil se houvesse múltiplos arquivos JSON de perguntas que precisassem ser mesclados.
+        // Para um único arquivo, ela ainda garante a estrutura e ordenação.
+        const trlsCombinados = combinarTRLs(trlDataComArea)
 
         // Filtra TRLs baseado no TRL inicial informado
         const trlInicial = Number.parseInt(formData.trlInicial) || 1
