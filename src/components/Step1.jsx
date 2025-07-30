@@ -6,7 +6,15 @@ import Tooltip from "./Tooltip"
 function Step1({ onStart }) {
   // Scroll para o topo quando o componente é montado
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" })
+    // Força o scroll imediatamente
+    window.scrollTo(0, 0)
+
+    // E também com smooth behavior após um pequeno delay
+    const timer = setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    }, 100)
+
+    return () => clearTimeout(timer)
   }, [])
 
   const [formData, setFormData] = useState({
@@ -73,6 +81,22 @@ function Step1({ onStart }) {
     }
   }
 
+  // Efeito para limpar o ambienteOperacional se TRL Final for menor que 7
+  useEffect(() => {
+    const trlFinalNum = Number(formData.trlFinal)
+    if (trlFinalNum < 7 && formData.ambienteOperacional !== "") {
+      setFormData((prevData) => ({
+        ...prevData,
+        ambienteOperacional: "",
+      }))
+      setErrors((prevErrors) => {
+        const newErrors = { ...prevErrors }
+        delete newErrors.ambienteOperacional
+        return newErrors
+      })
+    }
+  }, [formData.trlFinal, formData.ambienteOperacional])
+
   const validateForm = () => {
     const newErrors = {}
 
@@ -97,9 +121,12 @@ function Step1({ onStart }) {
     if (!formData.ambienteRelevante.trim()) {
       newErrors.ambienteRelevante = "Ambiente relevante é obrigatório"
     }
-    if (!formData.ambienteOperacional.trim()) {
-      newErrors.ambienteOperacional = "Ambiente operacional é obrigatório"
+
+    // Validação condicional para ambienteOperacional
+    if (Number(formData.trlFinal) >= 7 && !formData.ambienteOperacional.trim()) {
+      newErrors.ambienteOperacional = "Ambiente operacional é obrigatório para TRL Final >= 7"
     }
+
     if (formData.areasSelecionadas.length === 0) {
       newErrors.areasSelecionadas = "Selecione pelo menos uma área de avaliação"
     }
@@ -113,6 +140,8 @@ function Step1({ onStart }) {
       onStart(formData)
     }
   }
+
+  const showAmbienteOperacional = Number(formData.trlFinal) >= 7
 
   return (
     <div className="max-w-4xl mx-auto pt-8 pb-16">
@@ -332,38 +361,45 @@ function Step1({ onStart }) {
               {errors.ambienteRelevante && <p className="mt-1 text-sm text-red-600">{errors.ambienteRelevante}</p>}
             </div>
 
-            {/* Ambiente Operacional */}
-            <div>
-              <label htmlFor="ambienteOperacional" className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                Ambiente Operacional *
-                <Tooltip content={glossario.ambienteOperacional} position="top">
-                  <svg
-                    className="w-4 h-4 ml-2 text-gray-400 hover:text-blue-500 transition-colors"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </Tooltip>
-              </label>
-              <textarea
-                id="ambienteOperacional"
-                rows={3}
-                placeholder="Descreva o ambiente operacional do produto/processo"
-                value={formData.ambienteOperacional}
-                onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none ${
-                  errors.ambienteOperacional ? "border-red-300" : "border-gray-300"
-                }`}
-              />
-              {errors.ambienteOperacional && <p className="mt-1 text-sm text-red-600">{errors.ambienteOperacional}</p>}
-            </div>
+            {/* Ambiente Operacional - Renderizado condicionalmente */}
+            {showAmbienteOperacional && (
+              <div>
+                <label
+                  htmlFor="ambienteOperacional"
+                  className="flex items-center text-sm font-medium text-gray-700 mb-2"
+                >
+                  Ambiente Operacional *
+                  <Tooltip content={glossario.ambienteOperacional} position="top">
+                    <svg
+                      className="w-4 h-4 ml-2 text-gray-400 hover:text-blue-500 transition-colors"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </Tooltip>
+                </label>
+                <textarea
+                  id="ambienteOperacional"
+                  rows={3}
+                  placeholder="Descreva o ambiente operacional do produto/processo"
+                  value={formData.ambienteOperacional}
+                  onChange={handleChange}
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none ${
+                    errors.ambienteOperacional ? "border-red-300" : "border-gray-300"
+                  }`}
+                />
+                {errors.ambienteOperacional && (
+                  <p className="mt-1 text-sm text-red-600">{errors.ambienteOperacional}</p>
+                )}
+              </div>
+            )}
 
             {/* Áreas de Avaliação - Múltipla Seleção */}
             <div className="md:col-span-2">
