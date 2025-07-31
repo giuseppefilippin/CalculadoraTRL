@@ -1,36 +1,36 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Header from "./components/Header"
-import LandingPage from "./components/landing-page"
-import Step1 from "./components/Step1"
-import Step2 from "./components/Step2"
-import Resultado from "./components/Resultado"
+import { useState } from "react";
+import Header from "./components/Header";
+import LandingPage from "./components/landing-page";
+import Step1 from "./components/Step1";
+import Step2 from "./components/Step2";
+import Resultado from "./components/Resultado";
 
 function App() {
-  const [currentStep, setCurrentStep] = useState(0) // 0 = Landing, 1 = Step1, 2 = Step2, 3 = Resultado
-  const [formData, setFormData] = useState({})
-  const [resultData, setResultData] = useState(null)
+  const [currentStep, setCurrentStep] = useState(0); // 0 = Landing, 1 = Step1, 2 = Step2, 3 = Resultado
+  const [formData, setFormData] = useState({});
+  const [resultData, setResultData] = useState(null);
 
   const handleLandingStart = () => {
-    setCurrentStep(1)
-  } 
+    setCurrentStep(1);
+  };
 
   const handleStep1Complete = (data) => {
-    setFormData(data)
-    setCurrentStep(2)
-  }
+    setFormData(data);
+    setCurrentStep(2);
+  };
 
   const handleStep2Complete = (notaFinal, trls) => {
-    setResultData({ notaFinal, trls })
-    setCurrentStep(3)
-  }
+    setResultData({ notaFinal, trls });
+    setCurrentStep(3);
+  };
 
   const handleReset = () => {
-    setCurrentStep(0)
-    setFormData({})
-    setResultData(null)
-  }
+    setCurrentStep(0);
+    setFormData({});
+    setResultData(null);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -41,7 +41,9 @@ function App() {
 
         {currentStep === 1 && <Step1 onStart={handleStep1Complete} />}
 
-        {currentStep === 2 && <Step2 formData={formData} onFinish={handleStep2Complete} />}
+        {currentStep === 2 && (
+          <Step2 formData={formData} onFinish={handleStep2Complete} />
+        )}
 
         {currentStep === 3 && resultData && (
           <Resultado
@@ -53,7 +55,7 @@ function App() {
         )}
       </main>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
