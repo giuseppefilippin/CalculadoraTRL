@@ -32,9 +32,9 @@ Uma aplicação web interativa para avaliação do nível de maturidade tecnoló
 │   ├── Header.jsx.       # Componente header da tela de entrada
 │   ├── Step1.jsx         # Tela de entrada dos dados iniciais
 │   ├── Step2.jsx         # Avaliação TRL interativa
-|   ├── Resultado.jsx     # Resultados com gráficos
-|   ├── landing-page.jsx  # Explicação para o usuário
-|   └── Tooltip.jsx       # Glossario com pop up
+│   ├── Resultado.jsx     # Resultados com gráficos
+│   ├── landing-page.jsx  # Explicação para o usuário
+│   └── Tooltip.jsx       # Glossario com pop up
 ├── imgs 
 ├── perguntas
 │   ├── perguntas_eletrica.json
