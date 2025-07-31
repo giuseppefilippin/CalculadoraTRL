@@ -13,7 +13,11 @@ function App() {
   const [resultData, setResultData] = useState(null);
 
   const handleLandingStart = () => {
-    setCurrentStep(1);
+    // Força a rolagem para o topo antes de mudar para Step1
+    window.scrollTo(0, 0);
+    setTimeout(() => {
+      setCurrentStep(1);
+    }, 50); // pequeno delay garante que a rolagem ocorra antes do render
   };
 
   const handleStep1Complete = (data) => {
@@ -38,13 +42,10 @@ function App() {
 
       <main className="pt-24">
         {currentStep === 0 && <LandingPage onStart={handleLandingStart} />}
-
         {currentStep === 1 && <Step1 onStart={handleStep1Complete} />}
-
         {currentStep === 2 && (
           <Step2 formData={formData} onFinish={handleStep2Complete} />
         )}
-
         {currentStep === 3 && resultData && (
           <Resultado
             formData={formData}
