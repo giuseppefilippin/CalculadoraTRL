@@ -1,21 +1,21 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Tooltip from "./Tooltip"
+import { useState, useEffect } from "react";
+import Tooltip from "./Tooltip";
 
 function Step1({ onStart }) {
   // Scroll para o topo quando o componente é montado
   useEffect(() => {
     // Força o scroll imediatamente
-    window.scrollTo(0, 0)
+    window.scrollTo(0, 0);
 
     // E também com smooth behavior após um pequeno delay
     const timer = setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: "smooth" })
-    }, 100)
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, 100);
 
-    return () => clearTimeout(timer)
-  }, [])
+    return () => clearTimeout(timer);
+  }, []);
 
   const [formData, setFormData] = useState({
     nomeTecnologia: "",
@@ -28,9 +28,9 @@ function Step1({ onStart }) {
     ambienteRelevante: "",
     ambienteOperacional: "",
     areasSelecionadas: [], // Array para múltiplas seleções - inicializar como array vazio
-  })
+  });
 
-  const [errors, setErrors] = useState({})
+  const [errors, setErrors] = useState({});
 
   const areas = [
     { value: "eletrica", label: "Elétrica" },
@@ -40,7 +40,7 @@ function Step1({ onStart }) {
     { value: "materiais", label: "Materiais" },
     { value: "mecanica", label: "Mecânica" },
     //{ value: "gerais", label: "Gerais" },
-  ]
+  ];
 
   // Glossário de termos
   const glossario = {
@@ -56,115 +56,132 @@ function Step1({ onStart }) {
       "Descreva o resultado tangível do seu projeto: pode ser um produto físico, software, processo, metodologia ou serviço que será desenvolvido ou aprimorado.",
     areas:
       "Selecione as principais áreas técnicas envolvidas no desenvolvimento da sua tecnologia. Você pode escolher múltiplas áreas se o projeto for multidisciplinar.",
-  }
+  };
 
   const handleChange = (e) => {
-    const { id, value } = e.target
-    setFormData({ ...formData, [id]: value })
+    const { id, value } = e.target;
+    setFormData({ ...formData, [id]: value });
 
     // Clear error when user starts typing
     if (errors[id]) {
-      setErrors({ ...errors, [id]: "" })
+      setErrors({ ...errors, [id]: "" });
     }
-  }
+  };
 
   const handleAreaChange = (areaValue) => {
     const updatedAreas = formData.areasSelecionadas.includes(areaValue)
       ? formData.areasSelecionadas.filter((area) => area !== areaValue)
-      : [...formData.areasSelecionadas, areaValue]
+      : [...formData.areasSelecionadas, areaValue];
 
-    setFormData({ ...formData, areasSelecionadas: updatedAreas })
+    setFormData({ ...formData, areasSelecionadas: updatedAreas });
 
     // Clear error when user makes selection
     if (errors.areasSelecionadas) {
-      setErrors({ ...errors, areasSelecionadas: "" })
+      setErrors({ ...errors, areasSelecionadas: "" });
     }
-  }
+  };
 
   // Efeito para limpar o ambienteOperacional se TRL Final for menor que 7
   useEffect(() => {
-    const trlFinalNum = Number(formData.trlFinal)
+    const trlFinalNum = Number(formData.trlFinal);
     if (trlFinalNum < 7 && formData.ambienteOperacional !== "") {
       setFormData((prevData) => ({
         ...prevData,
         ambienteOperacional: "",
-      }))
+      }));
       setErrors((prevErrors) => {
-        const newErrors = { ...prevErrors }
-        delete newErrors.ambienteOperacional
-        return newErrors
-      })
+        const newErrors = { ...prevErrors };
+        delete newErrors.ambienteOperacional;
+        return newErrors;
+      });
     }
-  }, [formData.trlFinal, formData.ambienteOperacional])
+  }, [formData.trlFinal, formData.ambienteOperacional]);
 
   const validateForm = () => {
-    const newErrors = {}
+    const newErrors = {};
 
     if (!formData.nomeTecnologia.trim()) {
-      newErrors.nomeTecnologia = "Título do projeto é obrigatório"
+      newErrors.nomeTecnologia = "Título do projeto é obrigatório";
     }
     if (!formData.status) {
-      newErrors.status = "Status é obrigatório"
+      newErrors.status = "Status é obrigatório";
     }
     if (!formData.nomeResponsavel.trim()) {
-      newErrors.nomeResponsavel = "Nome do pesquisador é obrigatório"
+      newErrors.nomeResponsavel = "Nome do pesquisador é obrigatório";
     }
     if (!formData.produto.trim()) {
-      newErrors.produto = "Descrição do produto/processo é obrigatória"
+      newErrors.produto = "Descrição do produto/processo é obrigatória";
     }
-    if (!formData.trlInicial || formData.trlInicial < 1 || formData.trlInicial > 9) {
-      newErrors.trlInicial = "TRL inicial deve ser entre 1 e 9"
+    if (
+      !formData.trlInicial ||
+      formData.trlInicial < 1 ||
+      formData.trlInicial > 9
+    ) {
+      newErrors.trlInicial = "TRL inicial deve ser entre 1 e 9";
     }
     if (!formData.trlFinal || formData.trlFinal < 1 || formData.trlFinal > 9) {
-      newErrors.trlFinal = "TRL final deve ser entre 1 e 9"
+      newErrors.trlFinal = "TRL final deve ser entre 1 e 9";
     }
     if (!formData.ambienteRelevante.trim()) {
-      newErrors.ambienteRelevante = "Ambiente relevante é obrigatório"
+      newErrors.ambienteRelevante = "Ambiente relevante é obrigatório";
     }
 
     // Validação condicional para ambienteOperacional
-    if (Number(formData.trlFinal) >= 7 && !formData.ambienteOperacional.trim()) {
-      newErrors.ambienteOperacional = "Ambiente operacional é obrigatório para TRL Final >= 7"
+    if (
+      Number(formData.trlFinal) >= 7 &&
+      !formData.ambienteOperacional.trim()
+    ) {
+      newErrors.ambienteOperacional =
+        "Ambiente operacional é obrigatório para TRL Final >= 7";
     }
 
     if (formData.areasSelecionadas.length === 0) {
-      newErrors.areasSelecionadas = "Selecione pelo menos uma área de avaliação"
+      newErrors.areasSelecionadas =
+        "Selecione pelo menos uma área de avaliação";
     }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = () => {
     if (validateForm()) {
-      onStart(formData)
+      onStart(formData);
     } else {
       // Encontra o primeiro campo com erro e rola até ele
-      const firstErrorField = Object.keys(errors).find((key) => errors[key])
+      const firstErrorField = Object.keys(errors).find((key) => errors[key]);
       if (firstErrorField) {
-        const element = document.getElementById(firstErrorField)
+        const element = document.getElementById(firstErrorField);
         if (element) {
-          element.scrollIntoView({ behavior: "smooth", block: "center" })
+          element.scrollIntoView({ behavior: "smooth", block: "center" });
         }
       }
     }
-  }
+  };
 
-  const showAmbienteOperacional = Number(formData.trlFinal) >= 7
+  const showAmbienteOperacional = Number(formData.trlFinal) >= 7;
 
   return (
     <div className="max-w-4xl mx-auto pt-8 pb-16">
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-8">
-          <h2 className="text-2xl font-bold text-white mb-2">Informações Iniciais do Projeto</h2>
-          <p className="text-blue-100">Preencha os campos abaixo para iniciar a avaliação de maturidade tecnológica</p>
+          <h2 className="text-2xl font-bold text-white mb-2">
+            Informações Iniciais do Projeto
+          </h2>
+          <p className="text-blue-100">
+            Preencha os campos abaixo para iniciar a avaliação de maturidade
+            tecnológica
+          </p>
         </div>
 
         <div className="p-6 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Projeto */}
             <div className="md:col-span-2">
-              <label htmlFor="nomeTecnologia" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="nomeTecnologia"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Projeto (Título) *
               </label>
               <input
@@ -177,12 +194,19 @@ function Step1({ onStart }) {
                   errors.nomeTecnologia ? "border-red-300" : "border-gray-300"
                 }`}
               />
-              {errors.nomeTecnologia && <p className="mt-1 text-sm text-red-600">{errors.nomeTecnologia}</p>}
+              {errors.nomeTecnologia && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.nomeTecnologia}
+                </p>
+              )}
             </div>
 
             {/* Status */}
             <div>
-              <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="status"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Status do Projeto *
               </label>
               <select
@@ -198,12 +222,17 @@ function Step1({ onStart }) {
                 <option value="Proposto">Proposto</option>
                 <option value="Em andamento">Em andamento</option>
               </select>
-              {errors.status && <p className="mt-1 text-sm text-red-600">{errors.status}</p>}
+              {errors.status && (
+                <p className="mt-1 text-sm text-red-600">{errors.status}</p>
+              )}
             </div>
 
             {/* Pesquisador */}
             <div>
-              <label htmlFor="nomeResponsavel" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="nomeResponsavel"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Nome do Pesquisador *
               </label>
               <input
@@ -216,12 +245,19 @@ function Step1({ onStart }) {
                   errors.nomeResponsavel ? "border-red-300" : "border-gray-300"
                 }`}
               />
-              {errors.nomeResponsavel && <p className="mt-1 text-sm text-red-600">{errors.nomeResponsavel}</p>}
+              {errors.nomeResponsavel && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.nomeResponsavel}
+                </p>
+              )}
             </div>
 
             {/* Empresa */}
             <div className="md:col-span-2">
-              <label htmlFor="empresa" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="empresa"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Empresa/Cliente
               </label>
               <input
@@ -236,7 +272,10 @@ function Step1({ onStart }) {
 
             {/* Produto/Processo */}
             <div className="md:col-span-2">
-              <label htmlFor="produto" className="flex items-center text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="produto"
+                className="flex items-center text-sm font-medium text-gray-700 mb-2"
+              >
                 Produto/Processo *
                 <Tooltip content={glossario.produto} position="top">
                   <svg
@@ -264,12 +303,17 @@ function Step1({ onStart }) {
                   errors.produto ? "border-red-300" : "border-gray-300"
                 }`}
               />
-              {errors.produto && <p className="mt-1 text-sm text-red-600">{errors.produto}</p>}
+              {errors.produto && (
+                <p className="mt-1 text-sm text-red-600">{errors.produto}</p>
+              )}
             </div>
 
             {/* TRL Inicial */}
             <div>
-              <label htmlFor="trlInicial" className="flex items-center text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="trlInicial"
+                className="flex items-center text-sm font-medium text-gray-700 mb-2"
+              >
                 TRL Inicial *
                 <Tooltip content={glossario.trlInicial} position="top">
                   <svg
@@ -299,12 +343,17 @@ function Step1({ onStart }) {
                   errors.trlInicial ? "border-red-300" : "border-gray-300"
                 }`}
               />
-              {errors.trlInicial && <p className="mt-1 text-sm text-red-600">{errors.trlInicial}</p>}
+              {errors.trlInicial && (
+                <p className="mt-1 text-sm text-red-600">{errors.trlInicial}</p>
+              )}
             </div>
 
             {/* TRL Final */}
             <div>
-              <label htmlFor="trlFinal" className="flex items-center text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="trlFinal"
+                className="flex items-center text-sm font-medium text-gray-700 mb-2"
+              >
                 TRL Final *
                 <Tooltip content={glossario.trlFinal} position="top">
                   <svg
@@ -334,12 +383,17 @@ function Step1({ onStart }) {
                   errors.trlFinal ? "border-red-300" : "border-gray-300"
                 }`}
               />
-              {errors.trlFinal && <p className="mt-1 text-sm text-red-600">{errors.trlFinal}</p>}
+              {errors.trlFinal && (
+                <p className="mt-1 text-sm text-red-600">{errors.trlFinal}</p>
+              )}
             </div>
 
             {/* Ambiente Relevante */}
             <div>
-              <label htmlFor="ambienteRelevante" className="flex items-center text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="ambienteRelevante"
+                className="flex items-center text-sm font-medium text-gray-700 mb-2"
+              >
                 Ambiente Relevante *
                 <Tooltip content={glossario.ambienteRelevante} position="top">
                   <svg
@@ -364,10 +418,16 @@ function Step1({ onStart }) {
                 value={formData.ambienteRelevante}
                 onChange={handleChange}
                 className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none ${
-                  errors.ambienteRelevante ? "border-red-300" : "border-gray-300"
+                  errors.ambienteRelevante
+                    ? "border-red-300"
+                    : "border-gray-300"
                 }`}
               />
-              {errors.ambienteRelevante && <p className="mt-1 text-sm text-red-600">{errors.ambienteRelevante}</p>}
+              {errors.ambienteRelevante && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.ambienteRelevante}
+                </p>
+              )}
             </div>
 
             {/* Ambiente Operacional - Renderizado condicionalmente */}
@@ -378,7 +438,10 @@ function Step1({ onStart }) {
                   className="flex items-center text-sm font-medium text-gray-700 mb-2"
                 >
                   Ambiente Operacional *
-                  <Tooltip content={glossario.ambienteOperacional} position="top">
+                  <Tooltip
+                    content={glossario.ambienteOperacional}
+                    position="top"
+                  >
                     <svg
                       className="w-4 h-4 ml-2 text-gray-400 hover:text-blue-500 transition-colors"
                       fill="none"
@@ -401,11 +464,15 @@ function Step1({ onStart }) {
                   value={formData.ambienteOperacional}
                   onChange={handleChange}
                   className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none ${
-                    errors.ambienteOperacional ? "border-red-300" : "border-gray-300"
+                    errors.ambienteOperacional
+                      ? "border-red-300"
+                      : "border-gray-300"
                   }`}
                 />
                 {errors.ambienteOperacional && (
-                  <p className="mt-1 text-sm text-red-600">{errors.ambienteOperacional}</p>
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.ambienteOperacional}
+                  </p>
                 )}
               </div>
             )}
@@ -413,7 +480,8 @@ function Step1({ onStart }) {
             {/* Áreas de Avaliação - Múltipla Seleção */}
             <div className="md:col-span-2">
               <label className="flex items-center text-sm font-medium text-gray-700 mb-3">
-                O principal produto/processo do projeto envolve desenvolvimentos em: *
+                O principal produto/processo do projeto envolve desenvolvimentos
+                em: *
                 <Tooltip content={glossario.areas} position="top">
                   <svg
                     className="w-4 h-4 ml-2 text-gray-400 hover:text-blue-500 transition-colors"
@@ -432,30 +500,45 @@ function Step1({ onStart }) {
               </label>
               <div
                 className={`grid grid-cols-2 md:grid-cols-3 gap-4 p-4 border rounded-lg ${
-                  errors.areasSelecionadas ? "border-red-300 bg-red-50" : "border-gray-300 bg-gray-50"
+                  errors.areasSelecionadas
+                    ? "border-red-300 bg-red-50"
+                    : "border-gray-300 bg-gray-50"
                 }`}
               >
                 {areas.map((area) => (
-                  <label key={area.value} className="flex items-center space-x-3 cursor-pointer">
+                  <label
+                    key={area.value}
+                    className="flex items-center space-x-3 cursor-pointer"
+                  >
                     <input
                       type="checkbox"
                       checked={formData.areasSelecionadas.includes(area.value)}
                       onChange={() => handleAreaChange(area.value)}
                       className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                     />
-                    <span className="text-sm font-medium text-gray-700">{area.label}</span>
+                    <span className="text-sm font-medium text-gray-700">
+                      {area.label}
+                    </span>
                   </label>
                 ))}
               </div>
-              {errors.areasSelecionadas && <p className="mt-1 text-sm text-red-600">{errors.areasSelecionadas}</p>}
+              {errors.areasSelecionadas && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.areasSelecionadas}
+                </p>
+              )}
 
               {/* Mostrar áreas selecionadas */}
               {formData.areasSelecionadas.length > 0 && (
                 <div className="mt-3">
-                  <p className="text-sm text-gray-600 mb-2">Áreas selecionadas:</p>
+                  <p className="text-sm text-gray-600 mb-2">
+                    Áreas selecionadas:
+                  </p>
                   <div className="flex flex-wrap gap-2">
                     {formData.areasSelecionadas.map((area) => {
-                      const areaLabel = areas.find((a) => a.value === area)?.label
+                      const areaLabel = areas.find(
+                        (a) => a.value === area
+                      )?.label;
                       return (
                         <span
                           key={area}
@@ -467,7 +550,11 @@ function Step1({ onStart }) {
                             onClick={() => handleAreaChange(area)}
                             className="ml-2 inline-flex items-center justify-center w-4 h-4 rounded-full hover:bg-blue-200 focus:outline-none"
                           >
-                            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                            <svg
+                              className="w-3 h-3"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
                               <path
                                 fillRule="evenodd"
                                 d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -476,7 +563,7 @@ function Step1({ onStart }) {
                             </svg>
                           </button>
                         </span>
-                      )
+                      );
                     })}
                   </div>
                 </div>
@@ -490,15 +577,25 @@ function Step1({ onStart }) {
               className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
             >
               Iniciar Avaliação
-              <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              <svg
+                className="ml-2 w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </button>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Step1
+export default Step1;
