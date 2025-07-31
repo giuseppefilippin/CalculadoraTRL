@@ -1,5 +1,5 @@
-import lactecLogo from "../imgs/LACTEClogo.jpg"
-import araucariaLogo from "../imgs/fundacaoARAUCARIA.png"
+import lactecLogo from "../imgs/LACTEClogo.jpg";
+import araucariaLogo from "../imgs/fundacaoARAUCARIA.png";
 
 export default function Header() {
   return (
@@ -9,7 +9,11 @@ export default function Header() {
           <div className="flex items-center space-x-6">
             {/* LACTEC Logo */}
             <div className="flex-shrink-0">
-              <img src={lactecLogo || "/placeholder.svg"} alt="LACTEC" className="h-10 w-auto" />
+              <img
+                src={lactecLogo || "/placeholder.svg"}
+                alt="LACTEC"
+                className="h-10 w-auto"
+              />
             </div>
 
             {/* Separator */}
@@ -17,14 +21,22 @@ export default function Header() {
 
             {/* Araucária Logo */}
             <div className="flex-shrink-0">
-              <img src={araucariaLogo || "/placeholder.svg"} alt="Fundação Araucária" className="h-10 w-auto" />
+              <img
+                src={araucariaLogo || "/placeholder.svg"}
+                alt="Fundação Araucária"
+                className="h-10 w-auto"
+              />
             </div>
           </div>
 
           <div className="flex items-center space-x-4">
             <div className="text-right">
-              <h1 className="text-xl font-bold text-gray-900">TRL Calculator</h1>
-              <p className="text-sm text-gray-500">Technology Readiness Level</p>
+              <h1 className="text-xl font-bold text-gray-900">
+                TRL Calculator
+              </h1>
+              <p className="text-sm text-gray-500">
+                Technology Readiness Level
+              </p>
             </div>
 
             <div className="hidden sm:flex items-center space-x-2 text-sm text-gray-600">
@@ -36,5 +48,5 @@ export default function Header() {
         </div>
       </div>
     </header>
-  )
+  );
 }
