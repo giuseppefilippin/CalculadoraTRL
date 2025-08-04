@@ -82,7 +82,7 @@ export default function LandingPage({ onStart }) {
                 natural que com o desenrolar do projeto essa percepção evolua
                 com a própria solução e o histórico de mudança poderá ser
                 revisitado em diferentes estágios, desde a concepção de uma
-                proposta até os últimos passos para finalização do produto.{" "}
+                proposta até os últimos passos para finalização do produto.
               </p>
             </div>
           </div>
