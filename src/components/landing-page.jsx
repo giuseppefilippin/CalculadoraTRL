@@ -51,7 +51,39 @@ export default function LandingPage({ onStart }) {
                 do desenvolvimento tecnológico, desde a pesquisa básica até a
                 implementação operacional completa.
               </p>
-              <p className="text-gray-700">Escrever mais coisa aqui</p>
+              <p className="text-gray-700">
+                Em projetos de Pesquisa, Desenvolvimento e Inovação, uma ou mais
+                tecnologias passam por diversos estágios de evolução até que
+                possam ser efetivamente utilizadas ou comercializadas. Esses
+                estágios de desenvolvimento podem ser agrupados em níveis de
+                maturação tecnológica, que por sua vez estão associados a níveis
+                de confiabilidade e conformidade do produto atrelado a estas
+                tecnologias. Com base nesse conceito a NASA elaborou em 1974 a
+                primeira escala de avaliação de maturidade tecnológica,
+                conhecida por TRL – Technology Readiness Level. A escala foi
+                aprimorada ao longo dos anos e vem sendo amplamente utilizada em
+                diversos setores de produção. O TRL é uma metodologia
+                sistemática usada para avaliar o nível de maturidade de uma
+                tecnologia específica. Esta escala de 9 níveis permite uma
+                avaliação objetiva do desenvolvimento tecnológico, desde a
+                pesquisa básica até a implementação operacional completa de uma
+                solução. Esta calculadora web foi idealizada para auxiliar o
+                pesquisador na avaliação da maturidade tecnológica TRL de um
+                produto ou solução, em diferentes estágios de desenvolvimento.
+                As questões apresentadas são segmentadas por nível de maturidade
+                e o indicador final apresentado deve ser interpretado como um
+                resultado orientativo, que precisará estar conectado a uma
+                narrativa de desenvolvimento própria, conforme o propósito da
+                solução. Para cada questão objetiva obrigatória, há um espaço
+                opcional de preenchimento, reservado para o registro da
+                percepção do pesquisador (e equipe) em relação às evidências que
+                caracterizam o respectivo estágio de desenvolvimento. Embora
+                seja um campo opcional, recomenda-se o preenchimento, pois é
+                natural que com o desenrolar do projeto essa percepção evolua
+                com a própria solução e o histórico de mudança poderá ser
+                revisitado em diferentes estágios, desde a concepção de uma
+                proposta até os últimos passos para finalização do produto.{" "}
+              </p>
             </div>
           </div>
 
