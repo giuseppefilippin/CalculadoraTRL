@@ -45,13 +45,6 @@ export default function LandingPage({ onStart }) {
             </div>
             <div className="p-6">
               <p className="text-gray-700 mb-4">
-                O TRL é uma metodologia sistemática usada para avaliar o nível
-                de maturidade de uma tecnologia específica. Desenvolvida pela
-                NASA, esta escala de 1 a 9 níveis permite uma avaliação objetiva
-                do desenvolvimento tecnológico, desde a pesquisa básica até a
-                implementação operacional completa.
-              </p>
-              <p className="text-gray-700">
                 Em projetos de Pesquisa, Desenvolvimento e Inovação, uma ou mais
                 tecnologias passam por diversos estágios de evolução até que
                 possam ser efetivamente utilizadas ou comercializadas. Esses
