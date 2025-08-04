@@ -5,8 +5,16 @@ import { useEffect } from "react"
 function Resultado({ nomeResponsavel, nomeTecnologia, notaFinal, trls, onReset }) {
   // Scroll para o topo quando o componente é montado
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  }, [])
+    // Primeira tentativa imediata
+    window.scrollTo(0, 0);
+
+    // Segunda tentativa com pequeno atraso
+    const timer = setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 150);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const getTRLDescription = (level) => {
     const descriptions = {
