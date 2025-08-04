@@ -1,18 +1,12 @@
-"use client";
+"use client"
 
-import { useEffect } from "react";
+import { useEffect } from "react"
 
-function Resultado({
-  nomeResponsavel,
-  nomeTecnologia,
-  notaFinal,
-  trls,
-  onReset,
-}) {
+function Resultado({ nomeResponsavel, nomeTecnologia, notaFinal, trls, onReset }) {
   // Scroll para o topo quando o componente é montado
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }, [])
 
   const getTRLDescription = (level) => {
     const descriptions = {
@@ -25,44 +19,36 @@ function Resultado({
       7: "Demonstração em ambiente operacional",
       8: "Sistema completo e qualificado",
       9: "Sistema comprovado em ambiente operacional",
-    };
-    return descriptions[level] || "Nível não definido";
-  };
+    }
+    return descriptions[level] || "Nível não definido"
+  }
 
   const getTRLColor = (level) => {
-    if (level <= 3) return "bg-red-100 text-red-800 border-red-200";
-    if (level <= 6) return "bg-yellow-100 text-yellow-800 border-yellow-200";
-    return "bg-green-100 text-green-800 border-green-200";
-  };
+    if (level <= 3) return "bg-red-100 text-red-800 border-red-200"
+    if (level <= 6) return "bg-yellow-100 text-yellow-800 border-yellow-200"
+    return "bg-green-100 text-green-800 border-green-200"
+  }
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 pt-8 pb-16">
       {/* Header */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-8">
-          <h2 className="text-2xl font-bold text-white mb-2">
-            Resultado da Avaliação TRL
-          </h2>
-          <p className="text-blue-100">
-            Análise completa da maturidade tecnológica do seu projeto
-          </p>
+          <h2 className="text-2xl font-bold text-white mb-2">Resultado da Avaliação TRL</h2>
+          <p className="text-blue-100">Análise completa da maturidade tecnológica do seu projeto</p>
         </div>
 
         <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Informações do Projeto
-              </h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Informações do Projeto</h3>
               <dl className="space-y-3">
                 <div>
                   <dt className="text-sm font-medium text-gray-500">Projeto</dt>
                   <dd className="text-sm text-gray-900">{nomeTecnologia}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">
-                    Pesquisador
-                  </dt>
+                  <dt className="text-sm font-medium text-gray-500">Pesquisador</dt>
                   <dd className="text-sm text-gray-900">{nomeResponsavel}</dd>
                 </div>
               </dl>
@@ -71,20 +57,12 @@ function Resultado({
             <div className="flex items-center justify-center">
               <div className="text-center">
                 <div
-                  className={`inline-flex items-center px-6 py-3 rounded-full border-2 ${getTRLColor(
-                    notaFinal
-                  )} mb-4`}
+                  className={`inline-flex items-center px-6 py-3 rounded-full border-2 ${getTRLColor(notaFinal)} mb-4`}
                 >
-                  <span className="text-3xl font-bold mr-2">
-                    TRL {notaFinal}
-                  </span>
+                  <span className="text-3xl font-bold mr-2">TRL {notaFinal}</span>
                 </div>
-                <h4 className="text-lg font-semibold text-gray-900 mb-2">
-                  Nível de Maturidade Alcançado
-                </h4>
-                <p className="text-sm text-gray-600">
-                  {getTRLDescription(notaFinal)}
-                </p>
+                <h4 className="text-lg font-semibold text-gray-900 mb-2">Nível de Maturidade Alcançado</h4>
+                <p className="text-sm text-gray-600">{getTRLDescription(notaFinal)}</p>
               </div>
             </div>
           </div>
@@ -94,34 +72,27 @@ function Resultado({
       {/* Performance Chart */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900">
-            Desempenho por Nível TRL
-          </h3>
-          <p className="text-sm text-gray-600">
-            Pontuação obtida em cada nível de maturidade tecnológica
-          </p>
+          <h3 className="text-lg font-semibold text-gray-900">Desempenho por Nível TRL</h3>
+          <p className="text-sm text-gray-600">Pontuação obtida em cada nível de maturidade tecnológica</p>
         </div>
 
         <div className="p-6">
           <div className="space-y-4">
             {trls.map((trl, index) => {
-              const trlNumero = Number.parseInt(trl.nivel.match(/\d+/)[0]);
-              let somaPesos = 0;
-              let somaPontos = 0;
+              const trlNumero = Number.parseInt(trl.nivel.match(/\d+/)[0])
+              let somaPesos = 0
+              let somaPontos = 0
 
               trl.perguntas.forEach((p) => {
-                somaPesos += p.peso;
-                if (p.resposta === "sim") somaPontos += p.peso;
-              });
+                somaPesos += p.peso
+                if (p.resposta === "sim") somaPontos += p.peso
+              })
 
-              const score =
-                somaPesos > 0 ? Math.round((somaPontos / somaPesos) * 100) : 0;
+              const score = somaPesos > 0 ? Math.round((somaPontos / somaPesos) * 100) : 0
 
               return (
                 <div key={index} className="flex items-center space-x-4">
-                  <div className="w-16 text-sm font-medium text-gray-700">
-                    TRL {trlNumero}
-                  </div>
+                  <div className="w-16 text-sm font-medium text-gray-700">TRL {trlNumero}</div>
                   <div className="flex-1">
                     <div className="w-full bg-gray-200 rounded-full h-3">
                       <div
@@ -130,11 +101,9 @@ function Resultado({
                       />
                     </div>
                   </div>
-                  <div className="w-16 text-sm text-gray-600 text-right">
-                    {score}%
-                  </div>
+                  <div className="w-16 text-sm text-gray-600 text-right">{score}%</div>
                 </div>
-              );
+              )
             })}
           </div>
         </div>
@@ -143,9 +112,7 @@ function Resultado({
       {/* Detailed Results */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900">
-            Detalhamento das Respostas
-          </h3>
+          <h3 className="text-lg font-semibold text-gray-900">Detalhamento das Respostas</h3>
         </div>
 
         <div className="divide-y divide-gray-200">
@@ -157,25 +124,19 @@ function Resultado({
                   <div key={perguntaIdx} className="bg-gray-50 rounded-lg p-4">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-900 mb-1">
-                          {pergunta.pergunta}
-                        </p>
+                        <p className="text-sm font-medium text-gray-900 mb-1">{pergunta.pergunta}</p>
                         {pergunta.comentario && (
                           <p className="text-sm text-gray-600">
-                            <span className="font-medium">Comentário:</span>{" "}
-                            {pergunta.comentario}
+                            <span className="font-medium">Comentário:</span> {pergunta.comentario}
                           </p>
                         )}
                         <p className="text-xs text-gray-500 mt-1">
-                          <span className="font-medium">Peso:</span>{" "}
-                          {pergunta.peso}
+                          <span className="font-medium">Peso:</span> {pergunta.peso}
                         </p>
                       </div>
                       <span
                         className={`ml-4 px-2 py-1 text-xs font-medium rounded-full ${
-                          pergunta.resposta === "sim"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-red-100 text-red-800"
+                          pergunta.resposta === "sim" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
                         }`}
                       >
                         {pergunta.resposta === "sim" ? "Sim" : "Não"}
@@ -193,14 +154,9 @@ function Resultado({
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <button
           onClick={onReset}
-          className="inline-flex items-center justify-center px-6 py-3 bg-gray-600 text-white font-medium rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+          className="inline-flex items-center justify-center px-6 py-3 bg-gray-600 text-white font-medium rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors cursor-pointer"
         >
-          <svg
-            className="mr-2 w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="mr-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -213,14 +169,9 @@ function Resultado({
 
         <button
           onClick={() => window.print()}
-          className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+          className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors cursor-pointer"
         >
-          <svg
-            className="mr-2 w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="mr-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -232,7 +183,7 @@ function Resultado({
         </button>
       </div>
     </div>
-  );
+  )
 }
 
-export default Resultado;
+export default Resultado
