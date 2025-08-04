@@ -33,7 +33,7 @@ function Tooltip({ children, content, position = "top" }) {
 
       {isVisible && (
         <div className={`absolute z-50 ${positionClasses[position]}`}>
-          <div className="bg-gray-800 text-white text-sm rounded-lg py-2 px-3 w-[220px] break-words shadow-lg">
+          <div className="bg-gray-800 text-white text-sm rounded-lg py-2 px-3 w-[210px] break-words shadow-lg">
             {content}
           </div>
           <div
