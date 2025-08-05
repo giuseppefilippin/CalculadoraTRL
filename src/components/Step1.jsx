@@ -341,7 +341,7 @@ function Step1({ onStart }) {
               {errors.trlFinal && <p className="mt-1 text-sm text-red-600">{errors.trlFinal}</p>}
             </div>
 
-            {/* Ambiente Relevante */}
+            {/* Ambiente Relevante Talvez tirar e colocar em outro local*/}
             <div>
               <label htmlFor="ambienteRelevante" className="flex items-center text-sm font-medium text-gray-700 mb-2">
                 Ambiente Relevante *
@@ -374,7 +374,7 @@ function Step1({ onStart }) {
               {errors.ambienteRelevante && <p className="mt-1 text-sm text-red-600">{errors.ambienteRelevante}</p>}
             </div>
 
-            {/* Ambiente Operacional - Renderizado condicionalmente */}
+            {/* Ambiente Operacional - Renderizado condicionalmente - talvez tirar e colocar em outro local */}
             {showAmbienteOperacional && (
               <div>
                 <label
