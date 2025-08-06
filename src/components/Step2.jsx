@@ -538,7 +538,7 @@ function Step2({ formData, onFinish }) {
                           rows={4}
                           value={respostasTrlAtual[idx]?.explicacaoResposta || ""}
                           onChange={(e) => handleChange(currentTrlIndex, idx, "explicacaoResposta", e.target.value)}
-                          placeholder="Descreva detalhadamente sua resposta..."
+                          placeholder="Descreva sua resposta..."
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
                         />
                       </div>
