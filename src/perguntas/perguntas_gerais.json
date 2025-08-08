@@ -158,36 +158,28 @@
         "explicacao": "Descrever o ambiente operacional e restrições aplicáveis"
       },
       {
-        "pergunta": "Foi documentada a definição de requisitos de desempenho para o ambiente operacional?",
-        "explicacao": "Indicar relatório apresentando os requisitos de desempenho do protótipo em ambiente operacional"
+        "pergunta": "Foi documentada a definição de requisitos de desempenho para o ambiente operacional?"
       },
       {
-        "pergunta": "Foi documentada a definição do modelo e os procedimentos para realização dos testes?",
-        "explicacao": "Indicar relatório de definição do modelo e dos procedimentos para realização dos testes"
+        "pergunta": "Foi documentada a definição do modelo e os procedimentos para realização dos testes?"
       },
       {
-        "pergunta": "Foram realizados testes em cada interface do sistema, sob condições normais e anômalas?",
-        "explicacao": "Indicar relatório de testes das interfaces do sistema sob condições diversas"
+        "pergunta": "Foram realizados testes em cada interface do sistema, sob condições normais e anômalas?"
       },
       {
-        "pergunta": "Foram simuladas as funcionalidades disponíveis para demonstração em um ambiente operacional?",
-        "explicacao": "Indicar relatório com simulações das funcionalidades do protótipo em ambiente operacional"
+        "pergunta": "Foram simuladas as funcionalidades disponíveis para demonstração em um ambiente operacional?"
       },
       {
-        "pergunta": "O protótipo foi totalmente integrado ao ambiente real (ou simulado em um ambiente operacional adequado)?",
-        "explicacao": "Indicar relatório de avaliação de integração (ou simulação de integração) do protótipo em ambiente real"
+        "pergunta": "O protótipo foi totalmente integrado ao ambiente real (ou simulado em um ambiente operacional adequado)?"
       },
       {
-        "pergunta": "Os testes do protótipo do sistema foram realizados com sucesso no ambiente estipulado?",
-        "explicacao": "Indicar relatório de avaliação de testes (ou simulação de integração) do protótipo em ambiente real"
+        "pergunta": "Os testes do protótipo do sistema foram realizados com sucesso no ambiente estipulado?"
       },
       {
-        "pergunta": "Foi realizada a documentação completa dos testes do modelo de protótipo?",
-        "explicacao": "Indicar relatório com a documentação completa dos testes do protótipo"
+        "pergunta": "Foi realizada a documentação completa dos testes do modelo de protótipo?"
       },
       {
-        "pergunta": "Foram identificados e documentados os desafios técnicos e financeiros para a escalabilidade da tecnologia?",
-        "explicacao": "Indicar relatório com desafios técnicos e financeiros associado à escalabilidade (se escalável)"
+        "pergunta": "Foram identificados e documentados os desafios técnicos e financeiros para a escalabilidade da tecnologia?"
       }
     ]
   },
