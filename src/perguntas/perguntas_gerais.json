@@ -3,19 +3,17 @@
     "nivel": "TRL 1 - Princípios Básicos Observados e Relatados",
     "perguntas": [
       {
-        "pergunta": "Os princípios teóricos e físicos que fundamentam o produto/processo estão identificados?",
-        "explicacao": "Quais os princípios teóricos e físicos que embasam o desenvolvimento?"
+        "pergunta": "Os princípios teóricos e físicos que fundamentam o produto/processo estão identificados?"
       },
       {
-        "pergunta": "Existem estudos ou experimentos que confirmam os princípios básicos tecnológicos para funcionamento do produto/processo?",
-        "explicacao": "Cite estudos/experimentos que demonstrem a afirmação"
+        "pergunta": "Existem estudos ou experimentos que confirmam os princípios básicos tecnológicos para funcionamento do produto/processo?"
       },
       {
         "pergunta": "Foram avaliadas restrições legais e normativas que possam impactar o desenvolvimento almejado?",
         "explicacao": "Quais normas e legislações que foram pesquisadas/verificadas?"
       },
       {
-        "pergunta": "Foram levantados riscos técnicos e desafios na viabilidade da implementação do produto/processo?",
+        "pergunta": "Foram avaliados os riscos técnicos e desafios na viabilidade da implementação do produto/processo?",
         "explicacao": "Quais desafios técnicos foram identificados?"
       },
       {
