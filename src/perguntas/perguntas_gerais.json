@@ -44,6 +44,10 @@
         "explicacao": "Se existem, quais são as lacunas de desenvolvimento da tecnologia empregada pelo produto?"
       },
       {
+        "pergunta": "Foi concebido um processo conceitual preliminar para o produto/processo?",
+        "explicacao": "Já foi elaborado um esboço inicial que descreve como o produto ou processo deverá funcionar, incluindo suas principais funcionalidades, etapas e objetivos?"
+      },
+      {
         "pergunta": "Considerando o projeto conceitual estabelecido, é possível demonstrar (ou foi demonstrado) a viabilidade teórica do produto?"
       },
       {
