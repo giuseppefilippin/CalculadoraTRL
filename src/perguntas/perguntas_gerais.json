@@ -59,20 +59,16 @@
     "nivel": "TRL 3 - Prova de Conceito Experimental",
     "perguntas": [
       {
-        "pergunta": "Foi concretizada a documentação do projeto conceitual do produto/processo?",
-        "explicacao": "Apresente o link do projeto conceitual"
+        "pergunta": "Foi concretizada a documentação do projeto conceitual do produto/processo?"
       },
       {
-        "pergunta": "Foi verificada a viabilidade da aplicação do produto/processo por experimentos de laboratório (ou simulação)?",
-        "explicacao": "Indique o relatório ou evidências (mock up parcialmente funcional) da realização da PoC"
+        "pergunta": "Foi verificada a viabilidade da aplicação do produto/processo por experimentos de laboratório (ou simulação)?"
       },
       {
-        "pergunta": "Se foram identificadas possíveis falhas na concepção do produto em função de experimentos de laboratório, o projeto conceitual foi reavaliado?",
-        "explicacao": "em caso de resposta SIM, pressupõe-se ajustes no conceito (ou não funciona)"
+        "pergunta": "Se foram identificadas possíveis falhas na concepção do produto em função de experimentos de laboratório, o projeto conceitual foi reavaliado?"
       },
       {
-        "pergunta": "Foram identificadas e estão disponíveis as técnicas para desenvolvimento do produto/processo?",
-        "explicacao": "Quais são as técnicas identificadas e disponíveis para uso na elaboração do produto/processo?"
+        "pergunta": "Foram identificadas e estão disponíveis as técnicas para desenvolvimento do produto/processo?"
       }
     ]
   },
@@ -81,11 +77,11 @@
     "perguntas": [
       {
         "pergunta": "Foram testados os componentes individuais do produto/processo em laboratório e realizados relatórios?",
-        "explicacao": "Indique o relatório ou evidências (mock up funcional ou parcialmente funcional, real ou em escala)"
+        "explicacao": "Visão de quais são os componentes do produto que deverão ser testados"
       },
       {
         "pergunta": "Foram totalmente identificados os possíveis \"GAPs\" da tecnologia?",
-        "explicacao": "Quais as lacunas tecnológicas identificadas?"
+        "explicacao": "Quais os elementos de Tecnologia Críticos que compõem o desafio tecnológico da solução"
       },
       {
         "pergunta": "Foram identificados os requisitos gerais do sistema para aplicação aos usuários finais?",
@@ -103,6 +99,10 @@
       {
         "pergunta": "Foi realizada a definição preliminar de requisitos de desempenho no ambiente relevante?",
         "explicacao": "Definir ambiente relevante e explicitar os requisitos preliminares de desempenho dos sistemas que compõem o produto/processo"
+      },
+      {
+        "pergunta": "Foram identificadas e analisadas as funções críticas do produto/processo?",
+        "explicacao": "Indicar relatório apresentando as funções críticas e análises efetuadas"
       },
       {
         "pergunta": "Foi realizado o projeto preliminar do produto/processo, suportado por modelos apropriados para a verificação de funções críticas?",
@@ -130,16 +130,11 @@
     "nivel": "TRL 6 - Demonstração do Sistema em Ambiente Relevante",
     "perguntas": [
       {
-        "pergunta": "Foram identificadas e analisadas as funções críticas do produto/processo, verificadas e documentadas em relatório?",
+        "pergunta": "Foram documentadas e analisadas as funções críticas do produto/processo?",
         "explicacao": "Indicar relatório apresentando as funções críticas e análises efetuadas"
       },
       {
-        "pergunta": "O ambiente relevante de funcionamento para o sistema foi definido?",
-        "explicacao": "Explicitar se houver diferença entre o ambiente relevante para o componente e para o sistema"
-      },
-      {
-        "pergunta": "Foi realizada e documentada a definição de requisitos de desempenho e do ambiente relevante?",
-        "explicacao": "Indicar relatório apresentando os requisitos de desempenho do sistema e de definicção do ambiente relevante"
+        "pergunta": "Foi realizada e documentada a definição de requisitos de desempenho e do ambiente relevante?"
       },
       {
         "pergunta": "Foram documentados os requisitos completos de sistema e subsistema para funcionamento?",
