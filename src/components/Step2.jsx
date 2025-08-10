@@ -140,7 +140,7 @@ function Step2({ formData, onFinish }) {
     
     6: "Sugestões de entregáveis para uma proposta em elaboração durante o estágio TRL6:​\n•Relatório com requisitos de desempenho do produto em ambiente relevante​.\n•Relatório com requisitos completos de sistemas e subsistemas do produto​.\n•Relatório contendo as características de desempenho da tecnologia​.\n•Protótipo ou modelo representativo.​\n•Relatório de teste do protótipo em ambiente relevante​.",
 
-    7: "Sugestões de entregáveis para uma proposta em elaboração durante o estágio TRL7: Protótipo demonstrado em ambiente operacional real, Validação de requisitos de interface, Relatório de simulações de funcionalidades e desempenho, Relatório de integração do protótipo.",
+    7: "Sugestões de entregáveis para uma proposta em elaboração durante o estágio TRL7:​\n•Relatório com requisitos de desempenho do produto em ambiente operacional​.\n•Relatório com apresentação do protótipo e metodologia de testes em ambiente operacional​.\n•Relatório de testes dos sistemas e subsistemas em condições normais e anômalas​.\n•Relatório com simulação de funcionalidade em ambiente operacional​.\n•Relatório de integração do protótipo em ambiente operacional​.\n•Relatório de testes do protótipo em ambiente operacional​.\n•Relatório com análise de escalabilidade da tecnologia – aspectos técnicos e financeiros​.",
 
     8: "Faltando ainda ",
 
