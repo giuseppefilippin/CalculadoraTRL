@@ -1,0 +1,236 @@
+[
+  {
+    "nivel": "TRL 1 - Princípios Básicos Observados e Relatados",
+    "perguntas": [
+      {
+        "pergunta": "Os princípios teóricos e físicos que fundamentarão o produto/processo serão identificados?"
+      },
+      {
+        "pergunta": "Existirão estudos ou experimentos que confirmarão os princípios básicos tecnológicos para funcionamento do produto/processo?"
+      },
+      {
+        "pergunta": "Serão avaliadas restrições legais e normativas que possam impactar o desenvolvimento almejado?",
+        "explicacao": "Quais normas e legislações serão pesquisadas/verificadas?"
+      },
+      {
+        "pergunta": "Serão avaliados os riscos técnicos e desafios na viabilidade da implementação do produto/processo?",
+        "explicacao": "Quais desafios técnicos serão identificados?"
+      },
+      {
+        "pergunta": "Serão identificadas as ferramentas e metodologias para pesquisa e desenvolvimento do produto/processo?",
+        "explicacao": "Quais ferramentas/metodologias deverão ser empregadas no desenvolvimento?"
+      }
+    ]
+  },
+  {
+    "nivel": "TRL 2 - Formulação do Conceito Tecnológico",
+    "perguntas": [
+      {
+        "pergunta": "Serão formuladas as potenciais aplicações do produto/processo?",
+        "explicacao": "Descreva a(s) aplicação(ões)"
+      },
+      {
+        "pergunta": "Serão identificadas as principais funções a serem desempenhadas pelo produto/processo?",
+        "explicacao": "Descreva a(s) função(ões) do produto/processo"
+      },
+      {
+        "pergunta": "Serão identificadas as possíveis funcionalidades do produto/processo?",
+        "explicacao": "Descreva o modo como o produto/processo exercerá sua função e/ou como será empregado"
+      },
+      {
+        "pergunta": "Serão identificados possíveis \"GAPs\" da tecnologia e documentados?",
+        "explicacao": "Se existirem, quais serão as lacunas de desenvolvimento da tecnologia empregada pelo produto?"
+      },
+      {
+        "pergunta": "Será concebido um projeto conceitual preliminar para o produto/processo?"
+      },
+      {
+        "pergunta": "Considerando o projeto conceitual a ser estabelecido, será possível demonstrar a viabilidade teórica do produto?"
+      },
+      {
+        "pergunta": "Será documentada a viabilidade das aplicações do produto/processo, com base em estudos preliminares?"
+      },
+      {
+        "pergunta": "Serão especificados os requisitos de desempenho do produto/processo?"
+      }
+    ]
+  },
+  {
+    "nivel": "TRL 3 - Prova de Conceito Experimental",
+    "perguntas": [
+      {
+        "pergunta": "Será concretizada a documentação do projeto conceitual do produto/processo?"
+      },
+      {
+        "pergunta": "Será verificada a viabilidade da aplicação do produto/processo por experimentos de laboratório (ou simulação)?"
+      },
+      {
+        "pergunta": "Se forem identificadas possíveis falhas na concepção do produto em função de experimentos de laboratório, o projeto conceitual será reavaliado?"
+      },
+      {
+        "pergunta": "Serão identificadas e estarão disponíveis as técnicas para desenvolvimento do produto/processo?"
+      }
+    ]
+  },
+  {
+    "nivel": "TRL 4 - Validação de Componentes em Ambiente Laboratorial",
+    "perguntas": [
+      {
+        "pergunta": "Serão testados os componentes individuais do produto/processo em laboratório e realizados relatórios?",
+        "explicacao": "Visão de quais são os componentes do produto que deverão ser testados"
+      },
+      {
+        "pergunta": "Serão totalmente identificados os possíveis \"GAPs\" da tecnologia?",
+        "explicacao": "Quais os elementos de Tecnologia Críticos que comporão o desafio tecnológico da solução"
+      },
+      {
+        "pergunta": "Serão identificados os requisitos gerais do sistema para aplicação aos usuários finais?",
+        "explicacao": "Descreva os requisitos"
+      },
+      {
+        "pergunta": "Serão estabelecidas as métricas de desempenho do produto/processo?",
+        "explicacao": "Quais serão as métricas de desempenho do produto/processo"
+      }
+    ]
+  },
+  {
+    "nivel": "TRL 5 - Validação do Sistema em Ambiente Relevante",
+    "perguntas": [
+      {
+        "pergunta": "Será realizada a definição preliminar de requisitos de desempenho no ambiente relevante?",
+        "explicacao": "Definir ambiente relevante e explicitar os requisitos preliminares de desempenho dos sistemas que comporão o produto/processo"
+      },
+      {
+        "pergunta": "Serão identificadas e analisadas as funções críticas do produto/processo?",
+        "explicacao": "Indicar relatório apresentando as funções críticas e análises a serem efetuadas"
+      },
+      {
+        "pergunta": "Será realizado o projeto preliminar do produto/processo, suportado por modelos apropriados para a verificação de funções críticas?",
+        "explicacao": "Apresentar o projeto preliminar do produto/processo e embasamento de funcionamento em condições críticas"
+      },
+      {
+        "pergunta": "Serão identificados os efeitos das possíveis falhas da tecnologia (se houver)?",
+        "explicacao": "Apresentar análise de risco de falha das tecnologias a serem empregadas"
+      },
+      {
+        "pergunta": "Serão identificados os requisitos de interface do sistema?",
+        "explicacao": "Apresentar todos os requisitos de interface do sistema"
+      },
+      {
+        "pergunta": "Serão identificadas as interações entre os componentes/subsistemas?",
+        "explicacao": "Apresentar as interações possíveis entre componentes e subsistemas"
+      },
+      {
+        "pergunta": "Serão realizados testes tecnológicos dos componentes em ambiente relevante?",
+        "explicacao": "Apresentar testes a serem realizados em componentes em ambiente relevante"
+      }
+    ]
+  },
+  {
+    "nivel": "TRL 6 - Demonstração do Sistema em Ambiente Relevante",
+    "perguntas": [
+      {
+        "pergunta": "Serão documentadas e analisadas as funções críticas do produto/processo?",
+        "explicacao": "Indicar relatório apresentando as funções críticas e análises a serem efetuadas"
+      },
+      {
+        "pergunta": "Será realizada e documentada a definição de requisitos de desempenho e do ambiente relevante?"
+      },
+      {
+        "pergunta": "Serão documentados os requisitos completos de sistema e subsistema para funcionamento?",
+        "explicacao": "Indicar relatório com requisitos completos de funcionamento do sistema e subsistemas"
+      },
+      {
+        "pergunta": "Serão concluídas as avaliações das características de desempenho da tecnologia, mesmo considerando os possíveis \"GAPs\"?",
+        "explicacao": "Indicar relatório de avaliação das características de desempenho da tecnologia, indicando Gaps tecnológicos, se for o caso"
+      },
+      {
+        "pergunta": "Será testado o modelo representativo (protótipo) completo em laboratório ou ambiente operacional de alta fidelidade (simulação)?",
+        "explicacao": "Indicar relatório de teste do protótipo em laboratório ou de simulação em ambiente operacional de alta fidelidade"
+      }
+    ]
+  },
+  {
+    "nivel": "TRL 7 - Demonstração do Protótipo em Ambiente Realista",
+    "perguntas": [
+      {
+        "pergunta": "Será documentada a definição do ambiente operacional e suas restrições?",
+        "explicacao": "Descrever o ambiente operacional e restrições aplicáveis"
+      },
+      {
+        "pergunta": "Será documentada a definição de requisitos de desempenho para o ambiente operacional?"
+      },
+      {
+        "pergunta": "Será documentada a definição do modelo e os procedimentos para realização dos testes?"
+      },
+      {
+        "pergunta": "Serão realizados testes em cada interface do sistema, sob condições normais e anômalas?"
+      },
+      {
+        "pergunta": "Serão simuladas as funcionalidades disponíveis para demonstração em um ambiente operacional?"
+      },
+      {
+        "pergunta": "O protótipo será totalmente integrado ao ambiente real (ou simulado em um ambiente operacional adequado)?"
+      },
+      {
+        "pergunta": "Os testes do protótipo do sistema serão realizados com sucesso no ambiente estipulado?"
+      },
+      {
+        "pergunta": "Será realizada a documentação completa dos testes do modelo de protótipo?"
+      },
+      {
+        "pergunta": "Serão identificados e documentados os desafios técnicos e financeiros para a escalabilidade da tecnologia?"
+      }
+    ]
+  },
+  {
+    "nivel": "TRL 8 - Certificação do Sistema Completo",
+    "perguntas": [
+      {
+        "pergunta": "Será construído e integrado o modelo final no sistema final (produto/processo)?",
+        "explicacao": "Relatório de integração do produto no ambiente real de aplicação"
+      },
+      {
+        "pergunta": "Serão realizados ajustes dos componentes para compatibilidade com o sistema operacional?",
+        "explicacao": "Relatório de ajustes de componentes para integração no ambiente real de aplicação"
+      },
+      {
+        "pergunta": "Será testado o sistema e caracterizado com seu design e função para a aplicação pretendida?",
+        "explicacao": "Relatório de usabilidade"
+      },
+      {
+        "pergunta": "Será concluída a documentação formal de regulamentação?",
+        "explicacao": "Manual de uso do produto"
+      },
+      {
+        "pergunta": "Será concluída a documentação da gestão e controle de configuração?",
+        "explicacao": "Relatório de versionamento do produto/processo"
+      }
+    ]
+  },
+  {
+    "nivel": "TRL 9 - Sistema Operacional e Produção em Escala",
+    "perguntas": [
+      {
+        "pergunta": "Será plenamente demonstrado o sistema real em operação?",
+        "explicacao": "Indique o relatório que descreverá a aplicação real e análise de desempenho"
+      },
+      {
+        "pergunta": "Será implementado com sucesso o conceito operacional da tecnologia?",
+        "explicacao": "Indique o relatório que apresentará os indicadores que comprovarão a efetividade do produto/processo implementado"
+      },
+      {
+        "pergunta": "Serão realizados todos os processos de fabricação controlados para garantir o nível de qualidade adequado?",
+        "explicacao": "Indique o relatório que descreverá os processos de fabricação/produção e como a qualidade necessária será garantida"
+      },
+      {
+        "pergunta": "Serão realizadas publicações científicas e/ou patentes a respeito da tecnologia?",
+        "explicacao": "Indique (se for o caso) os registros de propriedade do produto/processo"
+      },
+      {
+        "pergunta": "Será possível reproduzir o mesmo projeto (ou aplicação) com os mesmos requisitos?",
+        "explicacao": "Justique a resposta"
+      }
+    ]
+  }
+]
