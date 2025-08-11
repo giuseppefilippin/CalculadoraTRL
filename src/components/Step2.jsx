@@ -136,6 +136,7 @@ function Step2({ formData, onFinish }) {
 
     9: "Faltando ainda ",
   };
+
   // Função para renderizar o texto da pergunta com tooltips para termos específicos
   const renderQuestionWithTooltips = (questionText) => {
     let parts = [questionText]
@@ -325,7 +326,6 @@ function Step2({ formData, onFinish }) {
   }
 
   const calcularNotaFinal = () => {
-    const threshold = 0.8 //0.55 funciona melhor com numero menor de perguntas (ex 5 perguntas)
     const trlInicial = Number.parseInt(formData.trlInicial) || 1
 
     // Começa com o TRL inicial como base mínima
@@ -337,11 +337,16 @@ function Step2({ formData, onFinish }) {
       const respostas = responses[i]
       let somaPesos = 0
       let somaPontos = 0
+      let respostasPositivas = 0
+      const totalPerguntas = trl.perguntas.length
 
       const perguntas = trl.perguntas.map((perguntaObj, idx) => {
         const peso = getPesosPergunta(trl.nivel, perguntaObj.pergunta)
         somaPesos += peso
-        if (respostas[idx].resposta === "sim") somaPontos += peso
+        if (respostas[idx].resposta === "sim") {
+          somaPontos += peso
+          respostasPositivas++
+        }
 
         return {
           pergunta: perguntaObj.pergunta,
@@ -356,9 +361,25 @@ function Step2({ formData, onFinish }) {
 
       trlsComPesos.push({ nivel: trl.nivel, perguntas })
 
+      // Threshold dinâmico baseado na quantidade de perguntas
+      let thresholdDinamico
+      if (totalPerguntas <= 3) {
+        thresholdDinamico = 0.67 // 67% para poucas perguntas
+      } else if (totalPerguntas <= 5) {
+        thresholdDinamico = 0.6 // 60% para 4-5 perguntas
+      } else if (totalPerguntas <= 8) {
+        thresholdDinamico = 0.65 // 65% para 6-8 perguntas
+      } else {
+        thresholdDinamico = 0.7 // 70% para muitas perguntas
+      }
+
+      // Combina percentual simples e média ponderada para decisão final
+      const percentualRespostasPositivas = respostasPositivas / totalPerguntas
       const mediaPonderada = somaPontos / somaPesos
-      if (mediaPonderada >= threshold) {
-        // Calcula o TRL baseado no número do TRL atual, não no índice
+
+      const criterioAtendido = percentualRespostasPositivas >= thresholdDinamico && mediaPonderada >= thresholdDinamico
+
+      if (criterioAtendido) {
         const trlAtualNumero = Number.parseInt(trl.nivel.match(/\d+/)[0])
         notaFinal = trlAtualNumero
       } else {
@@ -450,7 +471,7 @@ function Step2({ formData, onFinish }) {
   const respostasTrlAtual = responses[currentTrlIndex] || []
   const progress = ((currentTrlIndex + 1) / trls.length) * 100
 
-  // Obter o n��mero do TRL atual para exibição
+  // Obter o número do TRL atual para exibição
   const trlAtualNumero = Number.parseInt(trlAtual?.nivel.match(/\d+/)[0])
   const trlInicial = Number.parseInt(formData.trlInicial) || 1
   const trlFinal = Number.parseInt(formData.trlFinal) || 9
@@ -526,7 +547,6 @@ function Step2({ formData, onFinish }) {
                         <h3 className="text-lg font-semibold text-gray-900">
                           {renderQuestionWithTooltips(perguntaObj.pergunta)}
                         </h3>
-                        {/* Removido o span que exibia perguntaObj.areaLabel */}
                       </div>
                     </div>
 
