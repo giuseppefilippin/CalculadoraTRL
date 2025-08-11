@@ -41,6 +41,7 @@ Uma aplicação web interativa para avaliação do nível de maturidade tecnoló
 │   ├── perguntas_eletronica.json
 │   ├── perguntas_hardware.json
 │   ├── perguntas_software.json
+│   ├── perguntas_futuro.json
 │   └── perguntas_geral.json
 ├── firebase.js          # Configuração do Firebase
 ├── App.jsx              # Componente principal
