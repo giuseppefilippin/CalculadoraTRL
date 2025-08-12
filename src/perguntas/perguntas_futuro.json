@@ -42,10 +42,7 @@
         "explicacao": "Se existirem, quais serão as lacunas de desenvolvimento da tecnologia empregada pelo produto?"
       },
       {
-        "pergunta": "Será concebido um projeto conceitual preliminar para o produto/processo?"
-      },
-      {
-        "pergunta": "Considerando o projeto conceitual a ser estabelecido, será possível demonstrar a viabilidade teórica do produto?"
+        "pergunta": "Será concebido um projeto conceitual preliminar para o produto/processo e, considerando-o, será possível demonstrar sua viabilidade teórica?"
       },
       {
         "pergunta": "Será documentada a viabilidade das aplicações do produto/processo, com base em estudos preliminares?"
