@@ -65,6 +65,10 @@ function Step2({ formData, onFinish }) {
 
   // Glossário para termos dentro das perguntas
   const inQuestionGlossary = {
+    "princípios básicos tecnológicos": //caso queira outra explicação mudar aqui 
+      "Fundamentos científicos e tecnológicos essenciais que sustentam o funcionamento da tecnologia, incluindo teorias, leis físicas e conhecimentos técnicos fundamentais.",
+    "viabilidade da aplicação":
+      "Confirmação experimental ou por simulação de que o conceito tecnológico pode ser aplicado na prática, demonstrando sua funcionalidade em condições controladas.",
     "princípios teóricos e físicos":
       "Fundamentos científicos e leis da natureza que explicam o funcionamento da tecnologia.",
     "restrições legais e normativas":
@@ -615,7 +619,7 @@ function Step2({ formData, onFinish }) {
                 </svg>
                 <div>
                   <h4 className="font-semibold text-purple-900">Sugestões de Entregáveis para TRL {trlAtualNumero}:</h4>
-                  <p className="text-sm" style={{ whiteSpace: "pre-line" }}>{trlDeliverables[trlAtualNumero]}</p>
+                  <p className="text-sm" style={{whiteSpace: "pre-line" }}>{trlDeliverables[trlAtualNumero]}</p>
                 </div>
               </div>
             )}
