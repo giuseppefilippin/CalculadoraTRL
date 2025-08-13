@@ -1,22 +1,64 @@
+# ---------------------------------------
 # Logs
+# ---------------------------------------
 logs
 *.log
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+firebase-debug.log
 
-node_modules
-dist
-dist-ssr
+# ---------------------------------------
+# Dependências
+# ---------------------------------------
+node_modules/
+
+# ---------------------------------------
+# Build / distribuição
+# ---------------------------------------
+dist/
+dist-ssr/
+
+# ---------------------------------------
+# Caches / temporários
+# ---------------------------------------
+.vite/
+.cache/
+.tmp/
 *.local
-/src/firebase.js
-# Editor directories and files
+
+# ---------------------------------------
+# Variáveis de ambiente e segredos
+# ---------------------------------------
+.env
+.env.*
+!.env.example
+
+# ---------------------------------------
+# Firebase (estado local da CLI)
+# firebase.json deve ser versionado
+# ---------------------------------------
+.firebase/
+.firebaserc
+
+# ---------------------------------------
+# Arquivos do sistema
+# ---------------------------------------
+.DS_Store
+Thumbs.db
+
+# ---------------------------------------
+# IDE / Editor
+# ---------------------------------------
 .vscode/*
 !.vscode/extensions.json
-.idea
-.DS_Store
+.idea/
+*.iml
+
+# ---------------------------------------
+# Misc do Windows / .NET
+# ---------------------------------------
 *.suo
 *.ntvs*
 *.njsproj
