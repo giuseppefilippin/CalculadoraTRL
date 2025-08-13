@@ -67,7 +67,7 @@ function Step2({ formData, onFinish }) {
   const inQuestionGlossary = {
     "princípios básicos tecnológicos": //caso queira outra explicação mudar aqui 
       "Fundamentos científicos e tecnológicos essenciais que sustentam o funcionamento da tecnologia, incluindo teorias, leis físicas e conhecimentos técnicos fundamentais.",
-    "viabilidade da aplicação":
+    "viabilidade da aplicação": //trl 3 p 2
       "Confirmação experimental ou por simulação de que o conceito tecnológico pode ser aplicado na prática, demonstrando sua funcionalidade em condições controladas.",
     "princípios teóricos e físicos":
       "Fundamentos científicos e leis da natureza que explicam o funcionamento da tecnologia.",
