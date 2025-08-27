@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { db, auth } from "../firebase";
 import {
   collection,
@@ -16,37 +16,26 @@ export default function HistoricoResultados({ setCurrentPage }) {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
+  const snapRef = useRef(null); // <- guarda unsubscribe do onSnapshot
+  const authRef = useRef(null); // <- guarda unsubscribe do onAuthStateChanged
 
   useEffect(() => {
-  let unsubSnap = null; // manter referência ao snapshot atual
-
-  const unsubAuth = onAuthStateChanged(auth, (currentUser) => {
-    setUser(currentUser);
-
-    // sempre limpa o listener anterior ao trocar de usuário
-    if (unsubSnap) {
-      unsubSnap();
-      unsubSnap = null;
-    }
-
-    if (!currentUser) {
-      // deslogou: limpa a UI
-      setResultados([]);
-      setLoading(false);
-      setRefreshing(false);
-      return;
+  const attachSnapshot = (uid) => {
+    // limpa listener anterior se existir
+    if (snapRef.current) {
+      snapRef.current();
+      snapRef.current = null;
     }
 
     setLoading(true);
 
     const q = query(
       collection(db, "avaliacoes_trl"),
-      where("userId", "==", currentUser.uid),
+      where("userId", "==", uid),
       orderBy("dataAvaliacao", "desc")
     );
 
-    // registra e guarda o unsubscribe correto
-    unsubSnap = onSnapshot(
+    snapRef.current = onSnapshot(
       q,
       (snap) => {
         const itens = snap.docs.map((d) => {
@@ -59,8 +48,12 @@ export default function HistoricoResultados({ setCurrentPage }) {
             area: Array.isArray(data.areasSelecionadas)
               ? data.areasSelecionadas.join(", ")
               : data.area || "Gerais",
-            trlDesejado: Number(data.trlFinal) || Number(data.trlDesejado) || 9,
-            trlFinal: Number(data.notaFinal) || Number(data.trlFinal) || 1,
+            trlDesejado: Number.isFinite(Number(data.trlFinal))
+              ? Number(data.trlFinal)
+              : (Number.isFinite(Number(data.trlDesejado)) ? Number(data.trlDesejado) : 9),
+            trlFinal: Number.isFinite(Number(data.notaFinal))
+              ? Number(data.notaFinal)
+              : (Number.isFinite(Number(data.trlFinal)) ? Number(data.trlFinal) : 1),
             dataAvaliacao: data.dataAvaliacao || data.timestamp,
           };
         });
@@ -69,20 +62,92 @@ export default function HistoricoResultados({ setCurrentPage }) {
         setRefreshing(false);
       },
       (err) => {
-        console.error("Erro ao ler histórico:", err);
-        setLoading(false);
-        setRefreshing(false);
+        if (err?.code === "failed-precondition") {
+          // fallback sem orderBy (enquanto índice não existe/offline)
+          if (snapRef.current) {
+            snapRef.current();
+            snapRef.current = null;
+          }
+          const qFallback = query(
+            collection(db, "avaliacoes_trl"),
+            where("userId", "==", uid)
+          );
+          snapRef.current = onSnapshot(
+            qFallback,
+            (snap2) => {
+              const itens = snap2.docs
+                .map((d) => ({ id: d.id, ...d.data() }))
+                .sort((a, b) => {
+                  const ta = (a.dataAvaliacao?.toDate?.() || new Date(0)).getTime();
+                  const tb = (b.dataAvaliacao?.toDate?.() || new Date(0)).getTime();
+                  return tb - ta;
+                })
+                .map((data) => ({
+                  id: data.id,
+                  nomeProjeto: data.nomeTecnologia || "Projeto sem nome",
+                  descricaoProjeto: data.produto || "Sem descrição",
+                  status: data.status || "Não informado",
+                  area: Array.isArray(data.areasSelecionadas)
+                    ? data.areasSelecionadas.join(", ")
+                    : data.area || "Gerais",
+                  trlDesejado: Number.isFinite(Number(data.trlFinal))
+                    ? Number(data.trlFinal)
+                    : (Number.isFinite(Number(data.trlDesejado)) ? Number(data.trlDesejado) : 9),
+                  trlFinal: Number.isFinite(Number(data.notaFinal))
+                    ? Number(data.notaFinal)
+                    : (Number.isFinite(Number(data.trlFinal)) ? Number(data.trlFinal) : 1),
+                  dataAvaliacao: data.dataAvaliacao || data.timestamp,
+                }));
+              setResultados(itens);
+              setLoading(false);
+              setRefreshing(false);
+            },
+            (err2) => {
+              console.error("Erro no fallback do histórico:", err2);
+              setLoading(false);
+              setRefreshing(false);
+            }
+          );
+        } else {
+          console.error("Erro ao ler histórico:", err);
+          setLoading(false);
+          setRefreshing(false);
+        }
       }
     );
+  };
+
+  // conecta imediatamente se já houver usuário persistido
+  if (auth.currentUser) {
+    setUser(auth.currentUser);
+    attachSnapshot(auth.currentUser.uid);
+  } else {
+    setLoading(true);
+  }
+
+  // observa mudanças de autenticação
+  authRef.current = onAuthStateChanged(auth, (currentUser) => {
+    setUser(currentUser);
+
+    if (!currentUser) {
+      if (snapRef.current) {
+        snapRef.current();
+        snapRef.current = null;
+      }
+      setResultados([]);
+      setLoading(false);
+      setRefreshing(false);
+      return;
+    }
+
+    attachSnapshot(currentUser.uid);
   });
 
-  // cleanup do efeito: garante que TUDO é desinscrito
   return () => {
-    if (unsubSnap) unsubSnap();
-    unsubAuth();
+    if (snapRef.current) snapRef.current();
+    if (authRef.current) authRef.current();
   };
 }, []);
-
 
 
   const handleRefresh = () => {
