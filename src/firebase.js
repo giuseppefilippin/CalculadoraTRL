@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app"
-import { getFirestore } from "firebase/firestore"
+import { getFirestore, enableIndexedDbPersistence } from "firebase/firestore"
 import { getAuth } from "firebase/auth"
 
 const firebaseConfig = {
@@ -14,6 +14,14 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
+// ✅ Ativa cache offline (IndexedDB). O Firestore sincroniza quando voltar internet.
+enableIndexedDbPersistence(db).catch((err) => {
+  if (err.code === 'failed-precondition') {
+    console.warn("Persistência offline não habilitada — múltiplas abas abertas.")
+  } else if (err.code === 'unimplemented') {
+    console.warn("Persistência offline não suportada neste navegador.")
+  }
+})
 const auth = getAuth(app)
 
 export { db, auth }
