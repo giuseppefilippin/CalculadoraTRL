@@ -3,13 +3,13 @@
     "nivel": "TRL 1 - Princípios Básicos Observados e Relatados",
     "perguntas": [
       {
-        "pergunta": "Os princípios teóricos e físicos que fundamentarão o produto/processo serão identificados?"
+        "pergunta": "Os princípios teóricos e físicos que fundamentarão o produto/processo estão identificados?"
       },
       {
-        "pergunta": "Existirão estudos ou experimentos que confirmarão os princípios básicos tecnológicos para funcionamento do produto/processo?"
+        "pergunta": "Há previsão de estudos ou experimentos que confirmem os princípios básicos tecnológicos para funcionamento do produto/processo?"
       },
       {
-        "pergunta": "Serão avaliadas restrições legais e normativas que possam impactar o desenvolvimento almejado?",
+        "pergunta": "Está prevista a avaliação de restrições legais e normativas que possam impactar o desenvolvimento almejado?",
         "explicacao": "Quais normas e legislações serão pesquisadas/verificadas?"
       },
       {
