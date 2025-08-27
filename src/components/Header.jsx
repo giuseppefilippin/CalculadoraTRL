@@ -6,7 +6,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth"
 import lactecLogo from "../imgs/LACTEClogo.jpg"
 import araucariaLogo from "../imgs/fundacaoARAUCARIA.png"
 
-export default function Header() {
+export default function Header({ currentPage, setCurrentPage }) {
   const [user, setUser] = useState(null)
   const [dropdownOpen, setDropdownOpen] = useState(false)
 
@@ -24,6 +24,16 @@ export default function Header() {
     } catch (error) {
       console.error("Erro ao fazer logout:", error)
     }
+  }
+
+  const handleNavigateToResults = () => {
+    setCurrentPage("historico")
+    setDropdownOpen(false)
+  }
+
+  const handleNavigateToHome = () => {
+    setCurrentPage("home")
+    setDropdownOpen(false)
   }
 
   return (
@@ -80,8 +90,20 @@ export default function Header() {
                           {user.email}
                         </div>
                         <button
-                          onClick={handleLogout}
+                          onClick={handleNavigateToHome}
                           className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition-colors duration-150"
+                        >
+                          Início
+                        </button>
+                        <button
+                          onClick={handleNavigateToResults}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition-colors duration-150"
+                        >
+                          Resultados
+                        </button>
+                        <button
+                          onClick={handleLogout}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition-colors duration-150 border-t border-gray-100"
                         >
                           Sair
                         </button>

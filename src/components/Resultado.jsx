@@ -1,20 +1,54 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { db, auth } from "../firebase"
+import { collection, addDoc, serverTimestamp } from "firebase/firestore"
+import { onAuthStateChanged } from "firebase/auth"
 
-function Resultado({ nomeResponsavel, nomeTecnologia, notaFinal, trls, onReset }) {
-  // Scroll para o topo quando o componente é montado
+function Resultado({ formData, notaFinal, trls, onReset }) {
+  const [user, setUser] = useState(null)
+  const [salvando, setSalvando] = useState(false)
+  const [salvo, setSalvo] = useState(false)
+
   useEffect(() => {
-    // Primeira tentativa imediata
-    window.scrollTo(0, 0);
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser)
+    })
+    return () => unsubscribe()
+  }, [])
 
-    // Segunda tentativa com pequeno atraso
-    const timer = setTimeout(() => {
-      window.scrollTo(0, 0);
-    }, 150);
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }, [user, formData, notaFinal, trls, salvo])
 
-    return () => clearTimeout(timer);
-  }, []);
+  const salvarResultado = async () => {
+    if (!user || salvando || salvo) return
+
+    try {
+      setSalvando(true)
+
+      const resultadoData = {
+        userId: user.uid,
+        userEmail: user.email,
+        nomeProjeto: formData.nomeTecnologia || "Projeto sem nome",
+        descricaoProjeto: formData.descricao || "Sem descrição",
+        nomeResponsavel: formData.nomeResponsavel || "Não informado",
+        status: formData.status || "Não informado",
+        area: formData.area || "Não informado",
+        trlDesejado: formData.trlDesejado || 9,
+        trlFinal: notaFinal,
+        trls: trls,
+        dataAvaliacao: serverTimestamp(),
+      }
+
+      await addDoc(collection(db, "resultados"), resultadoData)
+      setSalvo(true)
+    } catch (error) {
+      console.error("Erro ao salvar resultado:", error)
+    } finally {
+      setSalvando(false)
+    }
+  }
 
   const getTRLDescription = (level) => {
     const descriptions = {
@@ -39,7 +73,26 @@ function Resultado({ nomeResponsavel, nomeTecnologia, notaFinal, trls, onReset }
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 pt-8 pb-16">
-      {/* Header */}
+      {salvando && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+          <div className="flex items-center justify-center space-x-2">
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
+            <span className="text-blue-700">Salvando resultado...</span>
+          </div>
+        </div>
+      )}
+
+      {salvo && (
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+          <div className="flex items-center justify-center space-x-2">
+            <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            <span className="text-green-700">Resultado salvo com sucesso!</span>
+          </div>
+        </div>
+      )}
+
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-8">
           <h2 className="text-2xl font-bold text-white mb-2">Resultado da Avaliação TRL</h2>
@@ -53,11 +106,19 @@ function Resultado({ nomeResponsavel, nomeTecnologia, notaFinal, trls, onReset }
               <dl className="space-y-3">
                 <div>
                   <dt className="text-sm font-medium text-gray-500">Projeto</dt>
-                  <dd className="text-sm text-gray-900">{nomeTecnologia}</dd>
+                  <dd className="text-sm text-gray-900">{formData?.nomeTecnologia || "Não informado"}</dd>
                 </div>
                 <div>
                   <dt className="text-sm font-medium text-gray-500">Pesquisador</dt>
-                  <dd className="text-sm text-gray-900">{nomeResponsavel}</dd>
+                  <dd className="text-sm text-gray-900">{formData?.nomeResponsavel || "Não informado"}</dd>
+                </div>
+                <div>
+                  <dt className="text-sm font-medium text-gray-500">Status</dt>
+                  <dd className="text-sm text-gray-900">{formData?.status || "Não informado"}</dd>
+                </div>
+                <div>
+                  <dt className="text-sm font-medium text-gray-500">Área</dt>
+                  <dd className="text-sm text-gray-900">{formData?.area || "Não informado"}</dd>
                 </div>
               </dl>
             </div>
@@ -77,7 +138,6 @@ function Resultado({ nomeResponsavel, nomeTecnologia, notaFinal, trls, onReset }
         </div>
       </div>
 
-      {/* Performance Chart */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-200">
           <h3 className="text-lg font-semibold text-gray-900">Desempenho por Nível TRL</h3>
@@ -117,7 +177,6 @@ function Resultado({ nomeResponsavel, nomeTecnologia, notaFinal, trls, onReset }
         </div>
       </div>
 
-      {/* Detailed Results */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-200">
           <h3 className="text-lg font-semibold text-gray-900">Detalhamento das Respostas</h3>
@@ -158,7 +217,6 @@ function Resultado({ nomeResponsavel, nomeTecnologia, notaFinal, trls, onReset }
         </div>
       </div>
 
-      {/* Actions */}
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <button
           onClick={onReset}

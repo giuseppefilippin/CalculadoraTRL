@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import db from "../firebase"
-import { collection, addDoc, serverTimestamp } from "firebase/firestore"
-import Tooltip from "./Tooltip" // Importar o componente Tooltip
+import { useEffect, useState } from "react";
+import { db, auth } from "../firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import Tooltip from "./Tooltip"; // Importar o componente Tooltip
 
 function getPesosPergunta(nivel, perguntaTexto) {
   const pesosPorNivel = {
@@ -16,12 +16,12 @@ function getPesosPergunta(nivel, perguntaTexto) {
     "TRL 7": 2.1,
     "TRL 8": 2.2,
     "TRL 9": 2.3,
-  }
+  };
 
-  const trlNum = nivel.split(":")[0].trim()
-  const pesoBase = pesosPorNivel[trlNum] || 1.0
+  const trlNum = nivel.split(":")[0].trim();
+  const pesoBase = pesosPorNivel[trlNum] || 1.0;
 
-  let pesoAjustado = pesoBase
+  let pesoAjustado = pesoBase;
 
   const palavrasChave = {
     alto: [
@@ -47,27 +47,36 @@ function getPesosPergunta(nivel, perguntaTexto) {
       "desempenho",
     ],
     baixo: ["identificado", "levantado", "definido", "iniciado"],
-  }
+  };
 
-  if (palavrasChave.alto.some((p) => perguntaTexto.toLowerCase().includes(p))) pesoAjustado *= 1.3
-  else if (palavrasChave.medio.some((p) => perguntaTexto.toLowerCase().includes(p))) pesoAjustado *= 1.1
-  else if (palavrasChave.baixo.some((p) => perguntaTexto.toLowerCase().includes(p))) pesoAjustado *= 0.9
+  if (palavrasChave.alto.some((p) => perguntaTexto.toLowerCase().includes(p)))
+    pesoAjustado *= 1.3;
+  else if (
+    palavrasChave.medio.some((p) => perguntaTexto.toLowerCase().includes(p))
+  )
+    pesoAjustado *= 1.1;
+  else if (
+    palavrasChave.baixo.some((p) => perguntaTexto.toLowerCase().includes(p))
+  )
+    pesoAjustado *= 0.9;
 
-  return Math.round(pesoAjustado * 100) / 100
+  return Math.round(pesoAjustado * 100) / 100;
 }
 
 function Step2({ formData, onFinish }) {
-  const [trls, setTrls] = useState([])
-  const [currentTrlIndex, setCurrentTrlIndex] = useState(0)
-  const [responses, setResponses] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [trls, setTrls] = useState([]);
+  const [currentTrlIndex, setCurrentTrlIndex] = useState(0);
+  const [responses, setResponses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Glossário para termos dentro das perguntas
   const inQuestionGlossary = {
-    "princípios básicos tecnológicos": //caso queira outra explicação mudar aqui 
+    //caso queira outra explicação mudar aqui
+    "princípios básicos tecnológicos":
       "Fundamentos científicos e tecnológicos essenciais que sustentam o funcionamento da tecnologia, incluindo teorias, leis físicas e conhecimentos técnicos fundamentais.",
-    "viabilidade da aplicação": //trl 3 p 2
+    //trl 3 p 2
+    "viabilidade da aplicação":
       "Confirmação experimental ou por simulação de que o conceito tecnológico pode ser aplicado na prática, demonstrando sua funcionalidade em condições controladas.",
     "princípios teóricos e físicos":
       "Fundamentos científicos e leis da natureza que explicam o funcionamento da tecnologia.",
@@ -98,14 +107,17 @@ function Step2({ formData, onFinish }) {
       "Especificações sobre como a tecnologia interage com outros sistemas, usuários ou o ambiente.",
     "interações entre os componentes/subsistemas":
       "Como as diferentes partes da tecnologia se comunicam e trabalham juntas.",
-    "modelo final": "A versão completa e otimizada da tecnologia, pronta para implantação ou comercialização.",
-    "sistema operacional": "O ambiente de uso final da tecnologia, onde ela opera em condições reais.",
-    usabilidade: "A facilidade com que os usuários podem aprender a usar, operar e interagir com a tecnologia.",
+    "modelo final":
+      "A versão completa e otimizada da tecnologia, pronta para implantação ou comercialização.",
+    "sistema operacional":
+      "O ambiente de uso final da tecnologia, onde ela opera em condições reais.",
+    usabilidade:
+      "A facilidade com que os usuários podem aprender a usar, operar e interagir com a tecnologia.",
     "publicações científicas e/ou patentes":
       "Registros formais do conhecimento e da propriedade intelectual da tecnologia.",
     "reproduzir o mesmo projeto":
       "A capacidade de replicar o desenvolvimento ou a aplicação da tecnologia com os mesmos resultados e requisitos.",
-  }
+  };
 
   // Explicações para cada nível TRL
   const trlExplanations = {
@@ -118,7 +130,7 @@ function Step2({ formData, onFinish }) {
     7: "Este nível envolve a demonstração do protótipo em um ambiente realista. As perguntas abordam a definição do ambiente operacional, testes de interface, simulações de funcionalidades e a integração do protótipo.",
     8: "A certificação do sistema completo é o objetivo. As perguntas investigam a construção e integração do modelo final, ajustes de componentes, testes de usabilidade e documentação formal de regulamentação.",
     9: "Nível final, onde o sistema está operacional e em produção em escala. As perguntas verificam a demonstração plena em operação, a implementação do conceito operacional, processos de fabricação e publicações/patentes.",
-  }
+  };
 
   // Sugestões de entregáveis para cada nível TRL
   const trlDeliverables = {
@@ -131,7 +143,7 @@ function Step2({ formData, onFinish }) {
     4: "Sugestões de entregáveis para uma proposta em elaboração durante o estágio TRL4:​\n•Relatório com análise de validação experimental ou por simulação de componentes que formarão o produto final.​\n•Relatório com identificação final dos  elementos de tecnologia críticos (que constituem o gap tecnológico da solução).",
 
     5: "Sugestões de entregáveis para uma proposta em elaboração durante o estágio TRL5:​\n•Relatório preliminar com requisitos de desempenho do produto em ambiente relevante​.\n•Relatório com projeto preliminar do produto (para verificação de funções críticas), contendo requisitos de interface.​\n•Relatório de interações entre componentes e subsistemas​.\n•Relatório de testes em ambiente relevante.",
-    
+
     6: "Sugestões de entregáveis para uma proposta em elaboração durante o estágio TRL6:​\n•Relatório com requisitos de desempenho do produto em ambiente relevante​.\n•Relatório com requisitos completos de sistemas e subsistemas do produto​.\n•Relatório contendo as características de desempenho da tecnologia​.\n•Protótipo ou modelo representativo.​\n•Relatório de teste do protótipo em ambiente relevante​.",
 
     7: "Sugestões de entregáveis para uma proposta em elaboração durante o estágio TRL7:​\n•Relatório com requisitos de desempenho do produto em ambiente operacional​.\n•Relatório com apresentação do protótipo e metodologia de testes em ambiente operacional​.\n•Relatório de testes dos sistemas e subsistemas em condições normais e anômalas​.\n•Relatório com simulação de funcionalidade em ambiente operacional​.\n•Relatório de integração do protótipo em ambiente operacional​.\n•Relatório de testes do protótipo em ambiente operacional​.\n•Relatório com análise de escalabilidade da tecnologia – aspectos técnicos e financeiros​.",
@@ -143,59 +155,71 @@ function Step2({ formData, onFinish }) {
 
   // Função para renderizar o texto da pergunta com tooltips para termos específicos
   const renderQuestionWithTooltips = (questionText) => {
-    let parts = [questionText]
+    let parts = [questionText];
 
     Object.entries(inQuestionGlossary).forEach(([term, definition]) => {
-      const newParts = []
-      const regex = new RegExp(`(${term.replace(/\\$$|\\$$/g, (match) => `\\${match}`)})`, "gi") // Escapa parênteses para regex
+      const newParts = [];
+      const regex = new RegExp(
+        `(${term.replace(/\\$$|\\$$/g, (match) => `\\${match}`)})`,
+        "gi"
+      ); // Escapa parênteses para regex
 
       parts.forEach((part, partIndex) => {
         if (typeof part === "string") {
-          const split = part.split(regex)
+          const split = part.split(regex);
           split.forEach((subPart, i) => {
             if (i % 2 === 1) {
               // É um termo correspondente
               newParts.push(
-                <Tooltip key={`${term}-${partIndex}-${i}`} content={definition} position="top">
-                  <span className="underline decoration-dotted cursor-help">{subPart}</span>
-                </Tooltip>,
-              )
+                <Tooltip
+                  key={`${term}-${partIndex}-${i}`}
+                  content={definition}
+                  position="top"
+                >
+                  <span className="underline decoration-dotted cursor-help">
+                    {subPart}
+                  </span>
+                </Tooltip>
+              );
             } else {
-              newParts.push(subPart)
+              newParts.push(subPart);
             }
-          })
+          });
         } else {
-          newParts.push(part) // Já é um elemento React (ex: outro Tooltip)
+          newParts.push(part); // Já é um elemento React (ex: outro Tooltip)
         }
-      })
-      parts = newParts
-    })
-    return parts
-  }
+      });
+      parts = newParts;
+    });
+    return parts;
+  };
 
   // Scroll para o topo quando o componente é montado
   useEffect(() => {
-    window.scrollTo(0, 0)
+    window.scrollTo(0, 0);
     const timer = setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: "smooth" })
-    }, 100)
-    return () => clearTimeout(timer)
-  }, [])
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     async function loadQuestions() {
       try {
-        setLoading(true)
-        setError(null)
+        setLoading(true);
+        setError(null);
 
         // Carrega perguntas baseado no status do projeto usando importações estáticas
-        let trlData
-        if (formData.status === "Proposto" || formData.status === "Em andamento") {
-          const module = await import(`../perguntas/perguntas_futuro.json`)
-          trlData = module.default
+        let trlData;
+        if (
+          formData.status === "Proposto" ||
+          formData.status === "Em andamento"
+        ) {
+          const module = await import(`../perguntas/perguntas_futuro.json`);
+          trlData = module.default;
         } else {
-          const module = await import(`../perguntas/perguntas_gerais.json`)
-          trlData = module.default
+          const module = await import(`../perguntas/perguntas_gerais.json`);
+          trlData = module.default;
         }
 
         // Adiciona identificador de área 'gerais' a cada pergunta, pois são perguntas gerais
@@ -206,64 +230,75 @@ function Step2({ formData, onFinish }) {
             area: "gerais", // Atribui 'gerais' como a área
             areaLabel: getAreaLabel("gerais"), // Atribui 'Gerais' como o rótulo
           })),
-        }))
+        }));
 
         if (trlDataComArea.length === 0) {
-          throw new Error("Nenhuma pergunta foi carregada")
+          throw new Error("Nenhuma pergunta foi carregada");
         }
 
         // Combina TRLs (isso também os ordenará)
         // Esta função é útil se houvesse múltiplos arquivos JSON de perguntas que precisassem ser mesclados.
         // Para um único arquivo, ela ainda garante a estrutura e ordenação.
-        const trlsCombinados = combinarTRLs(trlDataComArea)
+        const trlsCombinados = combinarTRLs(trlDataComArea);
 
         // Filtra TRLs baseado no TRL inicial informado
-        const trlInicial = Number.parseInt(formData.trlInicial) || 1
-        const trlFinal = Number.parseInt(formData.trlFinal) || 9
+        const trlInicial = Number.parseInt(formData.trlInicial) || 1;
+        const trlFinal = Number.parseInt(formData.trlFinal) || 9;
 
         const trlsFiltrados = trlsCombinados.filter((trl) => {
-          const trlNumero = Number.parseInt(trl.nivel.match(/\d+/)[0])
-          return trlNumero >= trlInicial && trlNumero <= trlFinal
-        })
+          const trlNumero = Number.parseInt(trl.nivel.match(/\d+/)[0]);
+          return trlNumero >= trlInicial && trlNumero <= trlFinal;
+        });
 
         const initialResponses = trlsFiltrados.map((trl) =>
-          trl.perguntas.map(() => ({ resposta: "", comentario: "", explicacaoResposta: "" })),
-        )
+          trl.perguntas.map(() => ({
+            resposta: "",
+            comentario: "",
+            explicacaoResposta: "",
+          }))
+        );
 
-        setTrls(trlsFiltrados)
-        setResponses(initialResponses)
+        setTrls(trlsFiltrados);
+        setResponses(initialResponses);
       } catch (error) {
-        console.error("Erro ao carregar perguntas:", error)
-        setError("Erro ao carregar as perguntas. Verifique se os arquivos existem.")
+        console.error("Erro ao carregar perguntas:", error);
+        setError(
+          "Erro ao carregar as perguntas. Verifique se os arquivos existem."
+        );
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
-    loadQuestions()
-  }, [formData.areasSelecionadas, formData.areaSelecionada, formData.trlInicial, formData.trlFinal])
+    loadQuestions();
+  }, [
+    formData.areasSelecionadas,
+    formData.areaSelecionada,
+    formData.trlInicial,
+    formData.trlFinal,
+  ]);
 
   // Função para combinar TRLs de diferentes áreas
   const combinarTRLs = (allTrlData) => {
-    const trlMap = new Map()
+    const trlMap = new Map();
 
     allTrlData.forEach((trl) => {
-      const nivel = trl.nivel
+      const nivel = trl.nivel;
       if (trlMap.has(nivel)) {
         // Combina perguntas do mesmo TRL
-        const existingTrl = trlMap.get(nivel)
-        existingTrl.perguntas.push(...trl.perguntas)
+        const existingTrl = trlMap.get(nivel);
+        existingTrl.perguntas.push(...trl.perguntas);
       } else {
-        trlMap.set(nivel, { ...trl })
+        trlMap.set(nivel, { ...trl });
       }
-    })
+    });
 
     // Converte Map para array e ordena por TRL
     return Array.from(trlMap.values()).sort((a, b) => {
-      const trlA = Number.parseInt(a.nivel.match(/\d+/)[0])
-      const trlB = Number.parseInt(b.nivel.match(/\d+/)[0])
-      return trlA - trlB
-    })
-  }
+      const trlA = Number.parseInt(a.nivel.match(/\d+/)[0]);
+      const trlB = Number.parseInt(b.nivel.match(/\d+/)[0]);
+      return trlA - trlB;
+    });
+  };
 
   const getAreaLabel = (area) => {
     const labels = {
@@ -272,28 +307,41 @@ function Step2({ formData, onFinish }) {
       hardware: "Hardware",
       software: "Software",
       gerais: "Gerais",
-    }
-    return labels[area] || area
-  }
+    };
+    return labels[area] || area;
+  };
 
   // Scroll para o topo quando muda de TRL
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  }, [currentTrlIndex])
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentTrlIndex]);
 
   const handleChange = (trlIdx, perguntaIdx, field, value) => {
-    const updated = [...responses]
+    const updated = [...responses];
     if (!updated[trlIdx]) {
-      updated[trlIdx] = []
+      updated[trlIdx] = [];
     }
     if (!updated[trlIdx][perguntaIdx]) {
-      updated[trlIdx][perguntaIdx] = { resposta: "", comentario: "", explicacaoResposta: "" }
+      updated[trlIdx][perguntaIdx] = {
+        resposta: "",
+        comentario: "",
+        explicacaoResposta: "",
+      };
     }
-    updated[trlIdx][perguntaIdx][field] = value
-    setResponses(updated)
-  }
+    updated[trlIdx][perguntaIdx][field] = value;
+    setResponses(updated);
+  };
 
   const salvarResultadoNoFirebase = async (notaFinal) => {
+    const user = auth.currentUser;
+    if (!user) {
+      console.warn("Usuario não autenticado");
+      return;
+    }
+    // Remove campos undefined do formData (Firestore não aceita undefined)
+    const formDataSafe = Object.fromEntries(
+      Object.entries(formData || {}).filter(([, v]) => v !== undefined)
+    );
     const respostasPorNivel = trls.map((trl, trlIdx) => ({
       nivel: trl.nivel,
       perguntas: trl.perguntas.map((perguntaObj, idx) => ({
@@ -305,51 +353,53 @@ function Step2({ formData, onFinish }) {
         explicacaoResposta: responses[trlIdx][idx].explicacaoResposta || "",
         peso: getPesosPergunta(trl.nivel, perguntaObj.pergunta),
       })),
-    }))
+    }));
 
     const doc = {
       ...formData,
+      ...formDataSafe,
+      nomeTecnologia: formData.nomeTecnologia || "Projeto sem nome",
+      produto: formData.produto || "Sem descrição",
       notaFinal,
       respostasPorNivel,
-      timestamp: serverTimestamp(),
-    }
+      userId: user.uid,
+      userEmail: user.email,
+      dataAvaliacao: serverTimestamp(),
+    };
 
     try {
-      // Apenas tente salvar se o objeto db não for vazio (ou seja, Firebase configurado)
-      if (Object.keys(db).length > 0) {
-        await addDoc(collection(db, "avaliacoes_trl"), doc)
-        alert("Dados salvos com sucesso no Firebase!")
-      } else {
-        console.warn("Firebase não configurado. Dados não serão salvos.")
-        // alert("Firebase não configurado. Dados não foram salvos no banco de dados.");
-      }
+      console.log("[DBG] vai gravar em avaliacoes_trl com user:", user.uid)
+      const ref = await addDoc(collection(db, "avaliacoes_trl"), doc);
+      console.log("[DBG] gravou! docId:", ref.id)
+      alert("Dados salvos com sucesso no Firebase!");
     } catch (error) {
-      console.error("Erro ao salvar no Firebase:", error)
-      alert("Erro ao salvar no Firebase.")
+      console.error("Erro ao salvar no Firebase:", error);
+      alert("Erro ao salvar no Firebase.");
     }
   }
 
   const calcularNotaFinal = () => {
-    const trlInicial = Number.parseInt(formData.trlInicial) || 1
+    console.log("[DBG] calcularNotaFinal acionado")
+    const trlInicial = Number.parseInt(formData.trlInicial) || 1;
 
     // Começa com o TRL inicial como base mínima
-    let notaFinal = trlInicial
-    const trlsComPesos = []
+    let notaFinal = trlInicial;
+    const trlsComPesos = [];
 
     for (let i = 0; i < trls.length; i++) {
-      const trl = trls[i]
-      const respostas = responses[i]
-      let somaPesos = 0
-      let somaPontos = 0
-      let respostasPositivas = 0
-      const totalPerguntas = trl.perguntas.length
+      const trl = trls[i];
+      const respostas = responses[i];
+      let somaPesos = 0;
+      let somaPontos = 0;
+      let respostasPositivas = 0;
+      const totalPerguntas = trl.perguntas.length;
 
       const perguntas = trl.perguntas.map((perguntaObj, idx) => {
-        const peso = getPesosPergunta(trl.nivel, perguntaObj.pergunta)
-        somaPesos += peso
+        const peso = getPesosPergunta(trl.nivel, perguntaObj.pergunta);
+        somaPesos += peso;
         if (respostas[idx].resposta === "sim") {
-          somaPontos += peso
-          respostasPositivas++
+          somaPontos += peso;
+          respostasPositivas++;
         }
 
         return {
@@ -360,43 +410,45 @@ function Step2({ formData, onFinish }) {
           resposta: respostas[idx].resposta,
           explicacaoResposta: respostas[idx].explicacaoResposta || "",
           peso,
-        }
-      })
+        };
+      });
 
-      trlsComPesos.push({ nivel: trl.nivel, perguntas })
+      trlsComPesos.push({ nivel: trl.nivel, perguntas });
 
       // Threshold dinâmico baseado na quantidade de perguntas
-      let thresholdDinamico
+      let thresholdDinamico;
       if (totalPerguntas <= 3) {
-        thresholdDinamico = 0.67 // 67% para poucas perguntas
+        thresholdDinamico = 0.67; // 67% para poucas perguntas
       } else if (totalPerguntas <= 5) {
-        thresholdDinamico = 0.6 // 60% para 4-5 perguntas
+        thresholdDinamico = 0.6; // 60% para 4-5 perguntas
       } else if (totalPerguntas <= 8) {
-        thresholdDinamico = 0.65 // 65% para 6-8 perguntas
+        thresholdDinamico = 0.65; // 65% para 6-8 perguntas
       } else {
-        thresholdDinamico = 0.7 // 70% para muitas perguntas
+        thresholdDinamico = 0.7; // 70% para muitas perguntas
       }
 
       // Combina percentual simples e média ponderada para decisão final
-      const percentualRespostasPositivas = respostasPositivas / totalPerguntas
-      const mediaPonderada = somaPontos / somaPesos
+      const percentualRespostasPositivas = respostasPositivas / totalPerguntas;
+      const mediaPonderada = somaPontos / somaPesos;
 
-      const criterioAtendido = percentualRespostasPositivas >= thresholdDinamico && mediaPonderada >= thresholdDinamico
+      const criterioAtendido =
+        percentualRespostasPositivas >= thresholdDinamico &&
+        mediaPonderada >= thresholdDinamico;
 
       if (criterioAtendido) {
-        const trlAtualNumero = Number.parseInt(trl.nivel.match(/\d+/)[0])
-        notaFinal = trlAtualNumero
+        const trlAtualNumero = Number.parseInt(trl.nivel.match(/\d+/)[0]);
+        notaFinal = trlAtualNumero;
       } else {
-        break
+        break;
       }
     }
 
-    salvarResultadoNoFirebase(notaFinal)
+    salvarResultadoNoFirebase(notaFinal);
 
     if (typeof onFinish === "function") {
-      onFinish(notaFinal, trlsComPesos)
+      onFinish(notaFinal, trlsComPesos);
     }
-  }
+  };
 
   if (loading) {
     return (
@@ -408,7 +460,7 @@ function Step2({ formData, onFinish }) {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -417,7 +469,12 @@ function Step2({ formData, onFinish }) {
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           <div className="p-8 text-center">
             <div className="text-red-600 mb-4">
-              <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                className="w-12 h-12 mx-auto"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -426,7 +483,9 @@ function Step2({ formData, onFinish }) {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Erro ao Carregar Perguntas</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              Erro ao Carregar Perguntas
+            </h3>
             <p className="text-gray-600 mb-4">{error}</p>
             <button
               onClick={() => window.location.reload()}
@@ -437,7 +496,7 @@ function Step2({ formData, onFinish }) {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   if (trls.length === 0) {
@@ -446,7 +505,12 @@ function Step2({ formData, onFinish }) {
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           <div className="p-8 text-center">
             <div className="text-yellow-600 mb-4">
-              <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                className="w-12 h-12 mx-auto"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -455,9 +519,12 @@ function Step2({ formData, onFinish }) {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Nenhuma Pergunta Encontrada</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              Nenhuma Pergunta Encontrada
+            </h3>
             <p className="text-gray-600 mb-4">
-              Não há perguntas disponíveis para o intervalo de TRL {formData.trlInicial} a {formData.trlFinal}.
+              Não há perguntas disponíveis para o intervalo de TRL{" "}
+              {formData.trlInicial} a {formData.trlFinal}.
             </p>
             <button
               onClick={() => window.history.back()}
@@ -468,30 +535,35 @@ function Step2({ formData, onFinish }) {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
-  const trlAtual = trls[currentTrlIndex]
-  const respostasTrlAtual = responses[currentTrlIndex] || []
-  const progress = ((currentTrlIndex + 1) / trls.length) * 100
+  const trlAtual = trls[currentTrlIndex];
+  const respostasTrlAtual = responses[currentTrlIndex] || [];
+  const progress = ((currentTrlIndex + 1) / trls.length) * 100;
 
   // Obter o número do TRL atual para exibição
-  const trlAtualNumero = Number.parseInt(trlAtual?.nivel.match(/\d+/)[0])
-  const trlInicial = Number.parseInt(formData.trlInicial) || 1
-  const trlFinal = Number.parseInt(formData.trlFinal) || 9
+  const trlAtualNumero = Number.parseInt(trlAtual?.nivel.match(/\d+/)[0]);
+  const trlInicial = Number.parseInt(formData.trlInicial) || 1;
+  const trlFinal = Number.parseInt(formData.trlFinal) || 9;
 
   return (
     <div className="max-w-4xl mx-auto pt-8 pb-16">
       {/* Progress Bar */}
       <div className="mb-8">
         <div className="flex justify-between items-center mb-2">
-          <span className="text-sm font-medium text-gray-700">Progresso da Avaliação</span>
+          <span className="text-sm font-medium text-gray-700">
+            Progresso da Avaliação
+          </span>
           <span className="text-sm text-gray-500">
             TRL {trlAtualNumero} ({currentTrlIndex + 1} de {trls.length})
           </span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2">
-          <div className="bg-blue-600 h-2 rounded-full transition-all duration-300" style={{ width: `${progress}%` }} />
+          <div
+            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+            style={{ width: `${progress}%` }}
+          />
         </div>
 
         {/* Indicador de intervalo TRL */}
@@ -503,9 +575,14 @@ function Step2({ formData, onFinish }) {
       </div>
 
       {/* Aviso para status "Proposto" ou "Em andamento" */}
-      {(formData.status === "Proposto" || formData.status === "Em andamento") && (
+      {(formData.status === "Proposto" ||
+        formData.status === "Em andamento") && (
         <div className="mb-8 p-4 bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-lg flex items-start space-x-3">
-          <svg className="flex-shrink-0 w-5 h-5 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <svg
+            className="flex-shrink-0 w-5 h-5 mt-0.5"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
             <path
               fillRule="evenodd"
               d="M8.257 3.099c.765-1.3 2.647-1.3 3.412 0l5.094 8.79c.765 1.3-.149 2.91-1.706 2.91H4.87c-1.557 0-2.472-1.61-1.706-2.91l5.094-8.79zM10 13a1 1 0 100-2 1 1 0 000 2zm-1-4a1 1 0 102 0V6a1 1 0 10-2 0v3z"
@@ -513,11 +590,15 @@ function Step2({ formData, onFinish }) {
             />
           </svg>
           <div>
-            <h4 className="font-semibold text-yellow-900">Atenção: Projeto {formData.status}!</h4>
+            <h4 className="font-semibold text-yellow-900">
+              Atenção: Projeto {formData.status}!
+            </h4>
             <p className="text-sm">
-              Se o seu projeto está em fase de proposta ou andamento, por favor, considere marcar "Sim" para as
-              perguntas que representam atividades que você planeja ou espera completar no futuro, mesmo que ainda não
-              tenham sido realizadas. Isso ajudará a refletir o potencial de maturidade da sua tecnologia.
+              Se o seu projeto está em fase de proposta ou andamento, por favor,
+              considere marcar "Sim" para as perguntas que representam
+              atividades que você planeja ou espera completar no futuro, mesmo
+              que ainda não tenham sido realizadas. Isso ajudará a refletir o
+              potencial de maturidade da sua tecnologia.
             </p>
           </div>
         </div>
@@ -526,23 +607,35 @@ function Step2({ formData, onFinish }) {
       {/* TRL Card */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="bg-gradient-to-r from-green-600 to-green-700 px-6 py-6">
-          <h2 className="text-2xl font-bold text-white mb-2">{trlAtual?.nivel || "Carregando..."}</h2>
-          <p className="text-green-100">Responda às perguntas abaixo para avaliar este nível de maturidade</p>
+          <h2 className="text-2xl font-bold text-white mb-2">
+            {trlAtual?.nivel || "Carregando..."}
+          </h2>
+          <p className="text-green-100">
+            Responda às perguntas abaixo para avaliar este nível de maturidade
+          </p>
         </div>
 
         <div className="p-6">
           {/* Nova explicação para o TRL atual */}
           {trlAtualNumero && trlExplanations[trlAtualNumero] && (
             <p className="text-gray-700 mb-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
-              <span className="font-semibold text-blue-800">Sobre este TRL:</span> {trlExplanations[trlAtualNumero]}
+              <span className="font-semibold text-blue-800">
+                Sobre este TRL:
+              </span>{" "}
+              {trlExplanations[trlAtualNumero]}
             </p>
           )}
           <div className="space-y-6">
             {trlAtual?.perguntas?.map((perguntaObj, idx) => (
-              <div key={idx} className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+              <div
+                key={idx}
+                className="bg-gray-50 rounded-lg p-6 border border-gray-200"
+              >
                 <div className="flex items-start space-x-4">
                   <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                    <span className="text-sm font-semibold text-blue-600">{idx + 1}</span>
+                    <span className="text-sm font-semibold text-blue-600">
+                      {idx + 1}
+                    </span>
                   </div>
 
                   <div className="flex-1 space-y-4">
@@ -556,10 +649,19 @@ function Step2({ formData, onFinish }) {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Resposta *</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Resposta *
+                        </label>
                         <select
                           value={respostasTrlAtual[idx]?.resposta || ""}
-                          onChange={(e) => handleChange(currentTrlIndex, idx, "resposta", e.target.value)}
+                          onChange={(e) =>
+                            handleChange(
+                              currentTrlIndex,
+                              idx,
+                              "resposta",
+                              e.target.value
+                            )
+                          }
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                         >
                           <option value="">-- Selecione --</option>
@@ -573,7 +675,10 @@ function Step2({ formData, onFinish }) {
                     {perguntaObj.explicacao && (
                       <div className="mt-4 pt-4 border-t border-gray-200">
                         <div className="flex items-center gap-2 mb-3">
-                          <Tooltip content={perguntaObj.explicacao} position="top">
+                          <Tooltip
+                            content={perguntaObj.explicacao}
+                            position="top"
+                          >
                             <svg
                               className="w-4 h-4 text-blue-600 hover:text-blue-500 transition-colors cursor-help"
                               fill="none"
@@ -588,12 +693,23 @@ function Step2({ formData, onFinish }) {
                               />
                             </svg>
                           </Tooltip>
-                          <span className="text-sm font-medium text-gray-700">Explicação:</span>
+                          <span className="text-sm font-medium text-gray-700">
+                            Explicação:
+                          </span>
                         </div>
                         <textarea
                           rows={4}
-                          value={respostasTrlAtual[idx]?.explicacaoResposta || ""}
-                          onChange={(e) => handleChange(currentTrlIndex, idx, "explicacaoResposta", e.target.value)}
+                          value={
+                            respostasTrlAtual[idx]?.explicacaoResposta || ""
+                          }
+                          onChange={(e) =>
+                            handleChange(
+                              currentTrlIndex,
+                              idx,
+                              "explicacaoResposta",
+                              e.target.value
+                            )
+                          }
                           placeholder="Descreva sua resposta..."
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
                         />
@@ -606,11 +722,16 @@ function Step2({ formData, onFinish }) {
           </div>
 
           {/* Sugestões de Entregáveis - Renderizado condicionalmente */}
-          {(formData.status === "Proposto" || formData.status === "Em andamento") &&
+          {(formData.status === "Proposto" ||
+            formData.status === "Em andamento") &&
             trlAtualNumero &&
             trlDeliverables[trlAtualNumero] && (
               <div className="mt-8 p-4 bg-purple-50 border border-purple-200 text-purple-800 rounded-lg flex items-start space-x-3">
-                <svg className="flex-shrink-0 w-5 h-5 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <svg
+                  className="flex-shrink-0 w-5 h-5 mt-0.5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
                   <path
                     fillRule="evenodd"
                     d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3a1 1 0 102 0V7zm-1 7a1 1 0 100-2 1 1 0 000 2z"
@@ -618,8 +739,12 @@ function Step2({ formData, onFinish }) {
                   />
                 </svg>
                 <div>
-                  <h4 className="font-semibold text-purple-900">Sugestões de Entregáveis para TRL {trlAtualNumero}:</h4>
-                  <p className="text-sm" style={{whiteSpace: "pre-line" }}>{trlDeliverables[trlAtualNumero]}</p>
+                  <h4 className="font-semibold text-purple-900">
+                    Sugestões de Entregáveis para TRL {trlAtualNumero}:
+                  </h4>
+                  <p className="text-sm" style={{ whiteSpace: "pre-line" }}>
+                    {trlDeliverables[trlAtualNumero]}
+                  </p>
                 </div>
               </div>
             )}
@@ -633,8 +758,18 @@ function Step2({ formData, onFinish }) {
               onClick={() => setCurrentTrlIndex((i) => i - 1)}
               className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
             >
-              <svg className="mr-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <svg
+                className="mr-2 w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
               Anterior
             </button>
@@ -645,8 +780,18 @@ function Step2({ formData, onFinish }) {
                 className="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors cursor-pointer"
               >
                 Próximo
-                <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                <svg
+                  className="ml-2 w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </button>
             ) : (
@@ -654,7 +799,12 @@ function Step2({ formData, onFinish }) {
                 onClick={calcularNotaFinal}
                 className="inline-flex items-center px-6 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors cursor-pointer"
               >
-                <svg className="mr-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="mr-2 w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -669,7 +819,7 @@ function Step2({ formData, onFinish }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Step2
+export default Step2;

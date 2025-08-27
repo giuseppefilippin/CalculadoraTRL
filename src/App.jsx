@@ -7,8 +7,10 @@ import LandingPage from "./components/landing-page"
 import Step1 from "./components/Step1"
 import Step2 from "./components/Step2"
 import Resultado from "./components/Resultado"
+import HistoricoResultados from "./components/HistoricoResultados"
 
 function App() {
+  const [currentPage, setCurrentPage] = useState("home") // 'home' or 'historico'
   const [currentStep, setCurrentStep] = useState(0) // 0 = Landing, 1 = Step1, 2 = Step2, 3 = Resultado
   const [formData, setFormData] = useState({})
   const [resultData, setResultData] = useState(null)
@@ -16,7 +18,7 @@ function App() {
   // Scroll para o topo sempre que mudar de step
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" })
-  }, [currentStep])
+  }, [currentStep, currentPage])
 
   const handleLandingStart = () => {
     setCurrentStep(1)
@@ -38,25 +40,38 @@ function App() {
     setResultData(null)
   }
 
+  const handleNavigateToHome = () => {
+    setCurrentPage("home")
+    setCurrentStep(0)
+    setFormData({})
+    setResultData(null)
+  }
+
   return (
     <AuthWrapper>
       <div className="min-h-screen bg-gray-50">
-        <Header />
+        <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
         <main className="pt-24">
-          {currentStep === 0 && <LandingPage onStart={handleLandingStart} />}
+          {currentPage === "historico" && <HistoricoResultados setCurrentPage={setCurrentPage} />}
 
-          {currentStep === 1 && <Step1 onStart={handleStep1Complete} />}
+          {currentPage === "home" && (
+            <>
+              {currentStep === 0 && <LandingPage onStart={handleLandingStart} />}
 
-          {currentStep === 2 && <Step2 formData={formData} onFinish={handleStep2Complete} />}
+              {currentStep === 1 && <Step1 onStart={handleStep1Complete} />}
 
-          {currentStep === 3 && resultData && (
-            <Resultado
-              formData={formData}
-              notaFinal={resultData.notaFinal}
-              trls={resultData.trls}
-              onReset={handleReset}
-            />
+              {currentStep === 2 && <Step2 formData={formData} onFinish={handleStep2Complete} />}
+
+              {currentStep === 3 && resultData && (
+                <Resultado
+                  formData={formData}
+                  notaFinal={resultData.notaFinal}
+                  trls={resultData.trls}
+                  onReset={handleReset}
+                />
+              )}
+            </>
           )}
         </main>
       </div>
