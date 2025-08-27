@@ -21,6 +21,7 @@ export default function Header({ currentPage, setCurrentPage }) {
     try {
       await signOut(auth)
       setDropdownOpen(false)
+      setCurrentPage("home")
     } catch (error) {
       console.error("Erro ao fazer logout:", error)
     }
