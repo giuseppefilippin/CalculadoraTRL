@@ -16,8 +16,8 @@ export default function HistoricoResultados({ setCurrentPage }) {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
-  const snapRef = useRef(null); // <- guarda unsubscribe do onSnapshot
-  const authRef = useRef(null); // <- guarda unsubscribe do onAuthStateChanged
+  const snapRef = useRef(null);
+  const authRef = useRef(null);
 
   useEffect(() => {
   const attachSnapshot = (uid) => {
