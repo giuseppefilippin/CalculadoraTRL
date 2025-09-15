@@ -241,33 +241,12 @@ export default function HistoricoResultados({ setCurrentPage }) {
         <div className="mb-8 flex justify-between items-center">
           <button
             onClick={() => setCurrentPage("home")}
-            className="inline-flex items-center text-blue-600 hover:text-blue-800 cursor-pointer"
+            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 cursor-pointer"
           >
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
             Voltar ao início
-          </button>
-
-          <button
-            onClick={handleRefresh}
-            disabled={refreshing}
-            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 cursor-pointer"
-          >
-            <svg
-              className={`w-4 h-4 mr-2 ${refreshing ? "animate-spin" : ""}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-              />
-            </svg>
-            {refreshing ? "Recarregando..." : "Recarregar"}
           </button>
         </div>
 
