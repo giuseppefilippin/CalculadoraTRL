@@ -16,6 +16,7 @@ function App() {
   const [currentStep, setCurrentStep] = useState(0); // 0 = Landing, 1 = Step1, 2 = Step2, 3 = Resultado
   const [formData, setFormData] = useState({});
   const [resultData, setResultData] = useState(null);
+  const [dadosPreenchidos, setDadosPreenchidos] = useState(null);
 
   // Scroll para o topo sempre que mudar de step
   useEffect(() => {
@@ -63,7 +64,10 @@ function App() {
 
         <main className="pt-24">
           {currentPage === "historico" && (
-            <HistoricoResultados setCurrentPage={setCurrentPage} />
+            <HistoricoResultados 
+              setCurrentPage={setCurrentPage}
+              setCurrentStep={setCurrentStep}
+              setDadosPreenchidos={setDadosPreenchidos} />
           )}
 
           {currentPage === "home" && (
@@ -72,7 +76,8 @@ function App() {
                 <LandingPage onStart={handleLandingStart} />
               )}
 
-              {currentStep === 1 && <Step1 onStart={handleStep1Complete} />}
+              {currentStep === 1 && (
+                 <Step1 onStart={handleStep1Complete} initialData={dadosPreenchidos}/>)}
 
               {currentStep === 2 && (
                 <Step2 formData={formData} onFinish={handleStep2Complete} />

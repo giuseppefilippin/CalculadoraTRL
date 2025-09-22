@@ -2,10 +2,10 @@
 
 import { useState, useEffect, useRef } from "react"
 import { db, auth } from "../firebase"
-import { collection, query, where, orderBy, onSnapshot } from "firebase/firestore"
+import { collection, query, where, orderBy, onSnapshot, doc, getDoc } from "firebase/firestore"
 import { onAuthStateChanged } from "firebase/auth"
 
-export default function HistoricoResultados({ setCurrentPage }) {
+export default function HistoricoResultados({ setCurrentPage, setDadosPreenchidos, setCurrentStep }) {
   const [resultados, setResultados] = useState([])
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
@@ -151,6 +151,46 @@ export default function HistoricoResultados({ setCurrentPage }) {
 
   const toggleDiagnostic = (resultadoId) => {
     setExpandedDiagnostic(expandedDiagnostic === resultadoId ? null : resultadoId)
+  }
+
+  const handleRedoEvaluation = async (resultadoId) => {
+    try {
+      // Buscar dados completos da avaliação no Firestore
+      const docRef = doc(db, "avaliacoes_trl", resultadoId)
+      const docSnap = await getDoc(docRef)
+
+      if (docSnap.exists()) {
+        const data = docSnap.data()
+
+        // Preparar dados para pré-preenchimento
+        const dadosParaPreenchimento = {
+        nomeTecnologia: data.nomeTecnologia ?? "",
+        produto: data.produto ?? "",
+        status: data.status ?? "Proposto",
+        empresa: data.empresa ?? "",
+        nomeResponsavel: data.nomeResponsavel ?? "",
+        // ATENÇÃO aos nomes esperados pelo Step1:
+        trlInicial: data.trlInicial ?? "",
+        trlFinal: (data.trlFinal ?? data.trlDesejado) ?? "",
+        ambienteRelevante: data.ambienteRelevante ?? "",
+        ambienteOperacional: data.ambienteOperacional ?? "",
+        areasSelecionadas: Array.isArray(data.areasSelecionadas) ? data.areasSelecionadas : [],
+        isReavaliacao: true,
+        avaliacaoOriginalId: resultadoId,
+      };
+
+        // Passar dados para o componente pai
+      setDadosPreenchidos?.(dadosParaPreenchimento);
+      setCurrentPage?.("home");
+      setCurrentStep?.(1);
+      } else {
+        console.error("Avaliação não encontrada")
+        alert("Erro ao carregar dados da avaliação. Tente novamente.")
+      }
+    } catch (error) {
+      console.error("Erro ao buscar dados da avaliação:", error)
+      alert("Erro ao carregar dados da avaliação. Tente novamente.")
+    }
   }
 
   const renderDiagnosticDetails = (resultado) => {
@@ -311,7 +351,7 @@ export default function HistoricoResultados({ setCurrentPage }) {
                           onClick={() => toggleDiagnostic(resultado.id)}
                           className="inline-flex items-center px-3 py-1 text-sm font-medium text-orange-700 bg-orange-100 rounded-full hover:bg-orange-200 cursor-pointer transition-colors"
                         >
-                          <svg className="w-4 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path
                               strokeLinecap="round"
                               strokeLinejoin="round"
@@ -323,6 +363,23 @@ export default function HistoricoResultados({ setCurrentPage }) {
                         </button>
                       )}
                     </div>
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-gray-200">
+                    <button
+                      onClick={() => handleRedoEvaluation(resultado.id)}
+                      className="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 cursor-pointer transition-colors"
+                    >
+                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                        />
+                      </svg>
+                      Refazer Avaliação
+                    </button>
                   </div>
 
                   {expandedDiagnostic === resultado.id && renderDiagnosticDetails(resultado)}

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Tooltip from "./Tooltip";
 
-function Step1({ onStart }) {
+function Step1({ onStart, initialData }) {
   // Scroll para o topo quando o componente é montado
   useEffect(() => {
     // Força o scroll imediatamente
@@ -28,7 +28,19 @@ function Step1({ onStart }) {
     ambienteRelevante: "",
     ambienteOperacional: "",
     areasSelecionadas: [], // Array para múltiplas seleções - inicializar como array vazio
+    isReavaliacao: false,
+    avaliacaoOriginalId: null,
   });
+
+  // Carrega dados iniciais vindos do histórico (se houver)
+  useEffect(() => {
+    if (initialData) {
+      setFormData((prev) => ({
+        ...prev,
+        ...initialData, // campos compatíveis serão aplicados
+      }));
+    }
+  }, [initialData]);
 
   const [errors, setErrors] = useState({});
 
