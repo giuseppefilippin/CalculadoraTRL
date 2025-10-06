@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { db, auth } from "../firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import Tooltip from "./Tooltip"; // Importar o componente Tooltip
+import Tooltip from "./Tooltip"; 
 
 function getPesosPergunta(nivel, perguntaTexto) {
   const pesosPorNivel = {
