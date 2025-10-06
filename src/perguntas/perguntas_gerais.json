@@ -9,16 +9,13 @@
         "pergunta": "Existem estudos ou experimentos que confirmam os princípios básicos tecnológicos para funcionamento do produto/processo?"
       },
       {
-        "pergunta": "Foram avaliadas restrições legais e normativas que possam impactar o desenvolvimento almejado?",
-        "explicacao": "Quais normas e legislações que foram pesquisadas/verificadas?"
+        "pergunta": "Foram avaliadas restrições legais e normativas que possam impactar o desenvolvimento almejado?"
       },
       {
-        "pergunta": "Foram avaliados os riscos técnicos e desafios na viabilidade da implementação do produto/processo?",
-        "explicacao": "Quais desafios técnicos foram identificados?"
+        "pergunta": "Foram avaliados os riscos técnicos e desafios na viabilidade da implementação do produto/processo?"
       },
       {
-        "pergunta": "Foram identificadas as ferramentas e metodologias para pesquisa e desenvolvimento do produto/processo?",
-        "explicacao": "Quais ferramentas/metodologias deverão ser empregadas no desenvolvimento?"
+        "pergunta": "Foram identificadas as ferramentas e metodologias para pesquisa e desenvolvimento do produto/processo?"
       }
     ]
   },
@@ -26,20 +23,16 @@
     "nivel": "TRL 2 - Formulação do Conceito Tecnológico",
     "perguntas": [
       {
-        "pergunta": "Foram formuladas as potenciais aplicações do produto/processo?",
-        "explicacao": "Descreva a(s) aplicação(ões)"
+        "pergunta": "Foram formuladas as potenciais aplicações do produto/processo?"
       },
       {
-        "pergunta": "Foram identificadas as principais funções a serem desempenhadas pelo produto/processo?",
-        "explicacao": "Descreva a(s) função(ões) do produto/processo"
+        "pergunta": "Foram identificadas as principais funções a serem desempenhadas pelo produto/processo?"
       },
       {
-        "pergunta": "Foram identificadas as possíveis funcionalidades do produto/processo?",
-        "explicacao": "Descreva o modo como o produto/processo exerce sua função e/ou como é empregado"
+        "pergunta": "Foram identificadas as possíveis funcionalidades do produto/processo?"
       },
       {
-        "pergunta": "Foram identificados possíveis \"GAPs\" da tecnologia e documentados?",
-        "explicacao": "Se existem, quais são as lacunas de desenvolvimento da tecnologia empregada pelo produto?"
+        "pergunta": "Foram identificados possíveis \"GAPs\" da tecnologia e documentados?"
       },
       {
         "pergunta": "Já foi concebido um projeto conceitual preliminar para o produto/processo e, considerando-o, foi (ou é) possível demonstrar a viabilidade teórica do produto?"
@@ -73,20 +66,16 @@
     "nivel": "TRL 4 - Validação de Componentes em Ambiente Laboratorial",
     "perguntas": [
       {
-        "pergunta": "Foram testados os componentes individuais do produto/processo em laboratório e realizados relatórios?",
-        "explicacao": "Visão de quais são os componentes do produto que deverão ser testados"
+        "pergunta": "Foram testados os componentes individuais do produto/processo em laboratório e realizados relatórios?"
       },
       {
-        "pergunta": "Foram totalmente identificados os possíveis \"GAPs\" da tecnologia?",
-        "explicacao": "Quais os elementos de Tecnologia Críticos que compõem o desafio tecnológico da solução"
+        "pergunta": "Foram totalmente identificados os possíveis \"GAPs\" da tecnologia?"
       },
       {
-        "pergunta": "Foram identificados os requisitos gerais do sistema para aplicação aos usuários finais?",
-        "explicacao": "Descreva os requisitos"
+        "pergunta": "Foram identificados os requisitos gerais do sistema para aplicação aos usuários finais?"
       },
       {
-        "pergunta": "Foram estabelecidas as métricas de desempenho do produto/processo?",
-        "explicacao": "Quais são as métricas de desempenho do produto/processo"
+        "pergunta": "Foram estabelecidas as métricas de desempenho do produto/processo?"
       }
     ]
   },
@@ -94,32 +83,25 @@
     "nivel": "TRL 5 - Validação do Sistema em Ambiente Relevante",
     "perguntas": [
       {
-        "pergunta": "Foi realizada a definição preliminar de requisitos de desempenho no ambiente relevante?",
-        "explicacao": "Definir ambiente relevante e explicitar os requisitos preliminares de desempenho dos sistemas que compõem o produto/processo"
+        "pergunta": "Foi realizada a definição preliminar de requisitos de desempenho no ambiente relevante?"
       },
       {
-        "pergunta": "Foram identificadas e analisadas as funções críticas do produto/processo?",
-        "explicacao": "Indicar relatório apresentando as funções críticas e análises efetuadas"
+        "pergunta": "Foram identificadas e analisadas as funções críticas do produto/processo?"
       },
       {
-        "pergunta": "Foi realizado o projeto preliminar do produto/processo, suportado por modelos apropriados para a verificação de funções críticas?",
-        "explicacao": "Apresentar o projeto preliminar do produto/processo e embasamento de funcionamento em condições críticas"
+        "pergunta": "Foi realizado o projeto preliminar do produto/processo, suportado por modelos apropriados para a verificação de funções críticas?"
       },
       {
-        "pergunta": "Foram identificados os efeitos das possíveis falhas da tecnologia (se houver)?",
-        "explicacao": "Apresentar análise de risco de falha das tecnologias empregadas"
+        "pergunta": "Foram identificados os efeitos das possíveis falhas da tecnologia (se houver)?"
       },
       {
-        "pergunta": "Foram identificados os requisitos de interface do sistema?",
-        "explicacao": "Apresentar todos os requisitos de interface do sistema"
+        "pergunta": "Foram identificados os requisitos de interface do sistema?"
       },
       {
-        "pergunta": "Foram identificadas as interações entre os componentes/subsistemas?",
-        "explicacao": "Apresentar as interações possíveis entre componentes e subsistemas"
+        "pergunta": "Foram identificadas as interações entre os componentes/subsistemas?"
       },
       {
-        "pergunta": "Foram realizados testes tecnológicos dos componentes em ambiente relevante?",
-        "explicacao": "Apresentar testes realizados em componentes em ambiente relevante"
+        "pergunta": "Foram realizados testes tecnológicos dos componentes em ambiente relevante?"
       }
     ]
   },
@@ -127,23 +109,19 @@
     "nivel": "TRL 6 - Demonstração do Sistema em Ambiente Relevante",
     "perguntas": [
       {
-        "pergunta": "Foram documentadas e analisadas as funções críticas do produto/processo?",
-        "explicacao": "Indicar relatório apresentando as funções críticas e análises efetuadas"
+        "pergunta": "Foram documentadas e analisadas as funções críticas do produto/processo?"
       },
       {
         "pergunta": "Foi realizada e documentada a definição de requisitos de desempenho e do ambiente relevante?"
       },
       {
-        "pergunta": "Foram documentados os requisitos completos de sistema e subsistema para funcionamento?",
-        "explicacao": "Indicar relatório com requisitos completos de funcionamento do sistema e subsistemas"
+        "pergunta": "Foram documentados os requisitos completos de sistema e subsistema para funcionamento?"
       },
       {
-        "pergunta": "Foram concluídas as avaliações das características de desempenho da tecnologia, mesmo considerando os possíveis \"GAPs\"?",
-        "explicacao": "Indicar relatório de avaliação das características de desempenho da tecnologia, indicando Gaps tecnológicos, se for o caso"
+        "pergunta": "Foram concluídas as avaliações das características de desempenho da tecnologia, mesmo considerando os possíveis \"GAPs\"?"
       },
       {
-        "pergunta": "Foi testado o modelo representativo (protótipo) completo em laboratório ou ambiente operacional de alta fidelidade (simulação)?",
-        "explicacao": "Indicar relatório de teste do protótipo em laboratório ou de simulação em ambiente operacional de alta fidelidade"
+        "pergunta": "Foi testado o modelo representativo (protótipo) completo em laboratório ou ambiente operacional de alta fidelidade (simulação)?"
       }
     ]
   },
@@ -151,8 +129,7 @@
     "nivel": "TRL 7 - Demonstração do Protótipo em Ambiente Realista",
     "perguntas": [
       {
-        "pergunta": "Foi documentada a definição do ambiente operacional e suas restrições?",
-        "explicacao": "Descrever o ambiente operacional e restrições aplicáveis"
+        "pergunta": "Foi documentada a definição do ambiente operacional e suas restrições?"
       },
       {
         "pergunta": "Foi documentada a definição de requisitos de desempenho para o ambiente operacional?"
@@ -184,24 +161,19 @@
     "nivel": "TRL 8 - Certificação do Sistema Completo",
     "perguntas": [
       {
-        "pergunta": "Foi construído e integrado o modelo final no sistema final (produto/processo)?",
-        "explicacao": "Relatório de integração do produto no ambiente real de aplicação"
+        "pergunta": "Foi construído e integrado o modelo final no sistema final (produto/processo)?"
       },
       {
-        "pergunta": "Foram realizados ajustes dos componentes para compatibilidade com o sistema operacional?",
-        "explicacao": "Relatório de ajustes de componentes para integração no ambiente real de aplicação"
+        "pergunta": "Foram realizados ajustes dos componentes para compatibilidade com o sistema operacional?"
       },
       {
-        "pergunta": "Foi testado o sistema e caracterizado com seu design e função para a aplicação pretendida?",
-        "explicacao": "Relatório de usabilidade"
+        "pergunta": "Foi testado o sistema e caracterizado com seu design e função para a aplicação pretendida?"
       },
       {
-        "pergunta": "Foi concluída a documentação formal de regulamentação?",
-        "explicacao": "Manual de uso do produto"
+        "pergunta": "Foi concluída a documentação formal de regulamentação?"
       },
       {
-        "pergunta": "Foi concluída a documentação da gestão e controle de configuração?",
-        "explicacao": "Relatório de versionamento do produto/processo"
+        "pergunta": "Foi concluída a documentação da gestão e controle de configuração?"
       }
     ]
   },
@@ -209,24 +181,19 @@
     "nivel": "TRL 9 - Sistema Operacional e Produção em Escala",
     "perguntas": [
       {
-        "pergunta": "Foi plenamente demonstrado o sistema real em operação?",
-        "explicacao": "Indique o relatório que descreve a aplicação real e análise de desempenho"
+        "pergunta": "Foi plenamente demonstrado o sistema real em operação?"
       },
       {
-        "pergunta": "Foi implementado com sucesso o conceito operacional da tecnologia?",
-        "explicacao": "Indique o relatório que apresenta os indicadores que comprovam a efetividade do produto/processo implementado"
+        "pergunta": "Foi implementado com sucesso o conceito operacional da tecnologia?"
       },
       {
-        "pergunta": "Foram realizados todos os processos de fabricação controlados para garantir o nível de qualidade adequado?",
-        "explicacao": "Indique o relatório que descreve os processos de fabricação/produção e como a qualidade necessária é garantida"
+        "pergunta": "Foram realizados todos os processos de fabricação controlados para garantir o nível de qualidade adequado?"
       },
       {
-        "pergunta": "Foram realizadas publicações científicas e/ou patentes a respeito da tecnologia?",
-        "explicacao": "Indique (se for o caso) os registros de propriedade do produto/processo"
+        "pergunta": "Foram realizadas publicações científicas e/ou patentes a respeito da tecnologia?"
       },
       {
-        "pergunta": "É possível reproduzir o mesmo projeto (ou aplicação) com os mesmos requisitos?",
-        "explicacao": "Justique a resposta"
+        "pergunta": "É possível reproduzir o mesmo projeto (ou aplicação) com os mesmos requisitos?"
       }
     ]
   }
