@@ -63,7 +63,7 @@ function getPesosPergunta(nivel, perguntaTexto) {
   return Math.round(pesoAjustado * 100) / 100;
 }
 
-function Step2({ formData, onFinish }) {
+function Step2({ formData, onFinish, initialAnswers }) {
   const [trls, setTrls] = useState([]);
   const [currentTrlIndex, setCurrentTrlIndex] = useState(0);
   const [responses, setResponses] = useState([]);
@@ -147,16 +147,15 @@ function Step2({ formData, onFinish }) {
     Object.entries(inQuestionGlossary).forEach(([term, definition]) => {
       const newParts = [];
       const regex = new RegExp(
-        `(${term.replace(/\\$$|\\$$/g, (match) => `\\${match}`)})`,
+        `(${term.replace(/\$$|\$$/g, (match) => `\\${match}`)})`,
         "gi"
-      ); // Escapa parênteses para regex
+      );
 
       parts.forEach((part, partIndex) => {
         if (typeof part === "string") {
           const split = part.split(regex);
           split.forEach((subPart, i) => {
             if (i % 2 === 1) {
-              // É um termo correspondente
               newParts.push(
                 <Tooltip
                   key={`${term}-${partIndex}-${i}`}
@@ -173,7 +172,7 @@ function Step2({ formData, onFinish }) {
             }
           });
         } else {
-          newParts.push(part); // Já é um elemento React (ex: outro Tooltip)
+          newParts.push(part);
         }
       });
       parts = newParts;
@@ -181,6 +180,7 @@ function Step2({ formData, onFinish }) {
     return parts;
   };
 
+  // Garantir posicionamento no topo
   useEffect(() => {
     window.scrollTo(0, 0);
     const timer = setTimeout(() => {
@@ -189,6 +189,7 @@ function Step2({ formData, onFinish }) {
     return () => clearTimeout(timer);
   }, []);
 
+  // Carrega perguntas e, se houver, respostas antigas
   useEffect(() => {
     async function loadQuestions() {
       try {
@@ -211,8 +212,8 @@ function Step2({ formData, onFinish }) {
           ...trl,
           perguntas: trl.perguntas.map((pergunta) => ({
             ...pergunta,
-            area: "gerais", // Atribui 'gerais' como a área
-            areaLabel: getAreaLabel("gerais"), // Atribui 'Gerais' como o rótulo
+            area: "gerais",
+            areaLabel: getAreaLabel("gerais"),
           })),
         }));
 
@@ -230,6 +231,7 @@ function Step2({ formData, onFinish }) {
           return trlNumero >= trlInicial && trlNumero <= trlFinal;
         });
 
+        // Estado inicial vazio
         const initialResponses = trlsFiltrados.map((trl) =>
           trl.perguntas.map(() => ({
             resposta: "",
@@ -237,12 +239,47 @@ function Step2({ formData, onFinish }) {
             explicacaoResposta: "",
           }))
         );
-
         const initialTrlComments = trlsFiltrados.map(() => "");
 
+        // Pré-preenchimento a partir de respostas antigas (se existirem)
+        let hydratedResponses = initialResponses;
+        let hydratedComments = initialTrlComments;
+
+        const antigas =
+          initialAnswers?.respostasPorNivel ||
+          initialAnswers?.step2 || // fallback se você usar outro formato
+          null;
+
+        if (Array.isArray(antigas) && antigas.length > 0) {
+          hydratedResponses = trlsFiltrados.map((trl, trlIdx) => {
+            const antigoNivel = antigas.find((r) => r.nivel === trl.nivel);
+            if (!antigoNivel) return initialResponses[trlIdx];
+
+            return trl.perguntas.map((perguntaObj, idx) => {
+              // tentamos casar por pergunta; se não, caímos no índice
+              const byText = antigoNivel.perguntas?.find(
+                (p) => p.pergunta === perguntaObj.pergunta
+              );
+              const byIndex = antigoNivel.perguntas?.[idx];
+
+              const fonte = byText || byIndex || {};
+              return {
+                resposta: fonte.resposta || "",
+                comentario: "", // se você passar comentários por pergunta, preencha aqui
+                explicacaoResposta: fonte.explicacaoResposta || "",
+              };
+            });
+          });
+
+          hydratedComments = trlsFiltrados.map((trl) => {
+            const antigoNivel = antigas.find((r) => r.nivel === trl.nivel);
+            return antigoNivel?.comentarioGeral || "";
+          });
+        }
+
         setTrls(trlsFiltrados);
-        setResponses(initialResponses);
-        setTrlComments(initialTrlComments);
+        setResponses(hydratedResponses);
+        setTrlComments(hydratedComments);
       } catch (error) {
         console.error("Erro ao carregar perguntas:", error);
         setError(
@@ -258,6 +295,7 @@ function Step2({ formData, onFinish }) {
     formData.areaSelecionada,
     formData.trlInicial,
     formData.trlFinal,
+    initialAnswers, // importante: reage quando vier respostas antigas
   ]);
 
   const combinarTRLs = (allTrlData) => {
@@ -296,25 +334,27 @@ function Step2({ formData, onFinish }) {
   }, [currentTrlIndex]);
 
   const handleChange = (trlIdx, perguntaIdx, field, value) => {
-    const updated = [...responses];
-    if (!updated[trlIdx]) {
-      updated[trlIdx] = [];
-    }
-    if (!updated[trlIdx][perguntaIdx]) {
-      updated[trlIdx][perguntaIdx] = {
-        resposta: "",
-        comentario: "",
-        explicacaoResposta: "",
-      };
-    }
-    updated[trlIdx][perguntaIdx][field] = value;
-    setResponses(updated);
+    setResponses((prev) => {
+      const updated = prev.map((arr) => arr.slice());
+      if (!updated[trlIdx]) updated[trlIdx] = [];
+      if (!updated[trlIdx][perguntaIdx]) {
+        updated[trlIdx][perguntaIdx] = {
+          resposta: "",
+          comentario: "",
+          explicacaoResposta: "",
+        };
+      }
+      updated[trlIdx][perguntaIdx][field] = value;
+      return updated;
+    });
   };
 
   const handleTrlCommentChange = (trlIdx, value) => {
-    const updated = [...trlComments];
-    updated[trlIdx] = value;
-    setTrlComments(updated);
+    setTrlComments((prev) => {
+      const updated = prev.slice();
+      updated[trlIdx] = value;
+      return updated;
+    });
   };
 
   const salvarResultadoNoFirebase = async (notaFinal) => {
@@ -326,6 +366,7 @@ function Step2({ formData, onFinish }) {
     const formDataSafe = Object.fromEntries(
       Object.entries(formData || {}).filter(([, v]) => v !== undefined)
     );
+
     const respostasPorNivel = trls.map((trl, trlIdx) => ({
       nivel: trl.nivel,
       comentarioGeral: trlComments[trlIdx] || "",
@@ -334,8 +375,9 @@ function Step2({ formData, onFinish }) {
         explicacao: perguntaObj.explicacao || "",
         area: perguntaObj.area || "",
         areaLabel: perguntaObj.areaLabel || "",
-        resposta: responses[trlIdx][idx].resposta,
-        explicacaoResposta: responses[trlIdx][idx].explicacaoResposta || "",
+        resposta: responses?.[trlIdx]?.[idx]?.resposta || "",
+        explicacaoResposta:
+          responses?.[trlIdx]?.[idx]?.explicacaoResposta || "",
         peso: getPesosPergunta(trl.nivel, perguntaObj.pergunta),
       })),
     }));
@@ -353,7 +395,6 @@ function Step2({ formData, onFinish }) {
     };
 
     try {
-      console.log("[DBG] vai gravar em avaliacoes_trl com user:", user.uid);
       const ref = await addDoc(collection(db, "avaliacoes_trl"), doc);
       console.log("[DBG] gravou! docId:", ref.id);
       alert("Dados salvos com sucesso no Firebase!");
@@ -364,7 +405,6 @@ function Step2({ formData, onFinish }) {
   };
 
   const calcularNotaFinal = () => {
-    console.log("[DBG] calcularNotaFinal acionado");
     const trlInicial = Number.parseInt(formData.trlInicial) || 1;
 
     let notaFinal = trlInicial;
@@ -372,7 +412,7 @@ function Step2({ formData, onFinish }) {
 
     for (let i = 0; i < trls.length; i++) {
       const trl = trls[i];
-      const respostas = responses[i];
+      const respostas = responses[i] || [];
       let somaPesos = 0;
       let somaPontos = 0;
       let respostasPositivas = 0;
@@ -381,7 +421,7 @@ function Step2({ formData, onFinish }) {
       const perguntas = trl.perguntas.map((perguntaObj, idx) => {
         const peso = getPesosPergunta(trl.nivel, perguntaObj.pergunta);
         somaPesos += peso;
-        if (respostas[idx].resposta === "sim") {
+        if ((respostas[idx]?.resposta || "") === "sim") {
           somaPontos += peso;
           respostasPositivas++;
         }
@@ -391,8 +431,8 @@ function Step2({ formData, onFinish }) {
           explicacao: perguntaObj.explicacao || "",
           area: perguntaObj.area || "",
           areaLabel: perguntaObj.areaLabel || "",
-          resposta: respostas[idx].resposta,
-          explicacaoResposta: respostas[idx].explicacaoResposta || "",
+          resposta: respostas[idx]?.resposta || "",
+          explicacaoResposta: respostas[idx]?.explicacaoResposta || "",
           peso,
         };
       });
@@ -401,17 +441,17 @@ function Step2({ formData, onFinish }) {
 
       let thresholdDinamico;
       if (totalPerguntas <= 3) {
-        thresholdDinamico = 0.67; // 67% para poucas perguntas
+        thresholdDinamico = 0.67;
       } else if (totalPerguntas <= 5) {
-        thresholdDinamico = 0.6; // 60% para 4-5 perguntas
+        thresholdDinamico = 0.6;
       } else if (totalPerguntas <= 8) {
-        thresholdDinamico = 0.65; // 65% para 6-8 perguntas
+        thresholdDinamico = 0.65;
       } else {
-        thresholdDinamico = 0.7; // 70% para muitas perguntas
+        thresholdDinamico = 0.7;
       }
 
       const percentualRespostasPositivas = respostasPositivas / totalPerguntas;
-      const mediaPonderada = somaPontos / somaPesos;
+      const mediaPonderada = somaPontos / (somaPesos || 1);
 
       const criterioAtendido =
         percentualRespostasPositivas >= thresholdDinamico &&
@@ -692,6 +732,7 @@ function Step2({ formData, onFinish }) {
               </div>
             ))}
           </div>
+
           <div className="mt-8 p-4 bg-gray-50 border border-gray-200 rounded-lg">
             <div className="flex items-center gap-2 mb-3">
               <svg
@@ -726,6 +767,7 @@ function Step2({ formData, onFinish }) {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
             />
           </div>
+
           {(formData.status === "Proposto" ||
             formData.status === "Em andamento") &&
             trlAtualNumero &&

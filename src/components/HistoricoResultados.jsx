@@ -5,7 +5,7 @@ import { db, auth } from "../firebase"
 import { collection, query, where, orderBy, onSnapshot, doc, getDoc } from "firebase/firestore"
 import { onAuthStateChanged } from "firebase/auth"
 
-export default function HistoricoResultados({ setCurrentPage, setDadosPreenchidos, setCurrentStep }) {
+export default function HistoricoResultados({ setCurrentPage, setDadosPreenchidos, setCurrentStep, setAnswersPreenchidas }) {
   const [resultados, setResultados] = useState([])
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
@@ -181,6 +181,7 @@ export default function HistoricoResultados({ setCurrentPage, setDadosPreenchido
 
         // Passar dados para o componente pai
       setDadosPreenchidos?.(dadosParaPreenchimento);
+      setAnswersPreenchidas({respostasPorNivel: data.respostasPorNivel || null,});
       setCurrentPage?.("home");
       setCurrentStep?.(1);
       } else {

@@ -17,6 +17,7 @@ function App() {
   const [formData, setFormData] = useState({});
   const [resultData, setResultData] = useState(null);
   const [dadosPreenchidos, setDadosPreenchidos] = useState(null);
+  const [answersPreenchidas, setAnswersPreenchidas] = useState(null);
 
   // Scroll para o topo sempre que mudar de step
   useEffect(() => {
@@ -67,7 +68,8 @@ function App() {
             <HistoricoResultados 
               setCurrentPage={setCurrentPage}
               setCurrentStep={setCurrentStep}
-              setDadosPreenchidos={setDadosPreenchidos} />
+              setDadosPreenchidos={setDadosPreenchidos}
+              setAnswersPreenchidas={setAnswersPreenchidas} />
           )}
 
           {currentPage === "home" && (
@@ -80,7 +82,7 @@ function App() {
                  <Step1 onStart={handleStep1Complete} initialData={dadosPreenchidos}/>)}
 
               {currentStep === 2 && (
-                <Step2 formData={formData} onFinish={handleStep2Complete} />
+                <Step2 formData={formData} onFinish={handleStep2Complete} initialAnswers={answersPreenchidas} />
               )}
 
               {currentStep === 3 && resultData && (
