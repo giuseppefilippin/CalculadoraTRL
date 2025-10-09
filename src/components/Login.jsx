@@ -1,7 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth"
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail, // << novo
+} from "firebase/auth"
 import { auth } from "../firebase"
 import lactecLogo from "../imgs/LACTEClogo.jpg"
 import araucariaLogo from "../imgs/fundacaoARAUCARIA.png"
@@ -12,6 +16,7 @@ const Login = ({ onLoginSuccess }) => {
   const [isRegistering, setIsRegistering] = useState(false)
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+  const [resetMsg, setResetMsg] = useState("") // << novo aviso de reset
 
   const getErrorMessage = (errorCode) => {
     switch (errorCode) {
@@ -29,6 +34,8 @@ const Login = ({ onLoginSuccess }) => {
         return "Email ou senha incorretos. Verifique suas credenciais."
       case "auth/too-many-requests":
         return "Muitas tentativas de login. Tente novamente em alguns minutos."
+      case "auth/missing-email":
+        return "Informe seu email para continuar."
       default:
         return "Erro ao processar solicitação. Tente novamente."
     }
@@ -45,7 +52,8 @@ const Login = ({ onLoginSuccess }) => {
       return false
     }
 
-    if (password.length < 6) {
+    if (!isRegistering && password.length < 6) {
+      // para login exigimos senha (no reset não)
       setError("Senha deve ter pelo menos 6 caracteres")
       return false
     }
@@ -56,27 +64,42 @@ const Login = ({ onLoginSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError("")
+    setResetMsg("")
 
-    if (!validateForm()) {
-      return
-    }
-
+    if (!validateForm()) return
     setLoading(true)
 
     try {
-      console.log("[v0] Attempting authentication with:", { email, isRegistering })
       if (isRegistering) {
         await createUserWithEmailAndPassword(auth, email, password)
       } else {
         await signInWithEmailAndPassword(auth, email, password)
       }
-      console.log("[v0] Authentication successful")
       onLoginSuccess()
     } catch (error) {
-      console.log("[v0] Authentication error:", error.code, error.message)
       setError(getErrorMessage(error.code))
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleResetPassword = async () => {
+    setError("")
+    setResetMsg("")
+
+    const targetEmail = email.trim()
+    if (!targetEmail) {
+      setError("Digite seu email no campo acima para receber o link de redefinição.")
+      return
+    }
+
+    try {
+      // Se quiser personalizar a URL de retorno, configure actionCodeSettings aqui
+      // const actionCodeSettings = { url: "https://seu-dominio.com/login" }
+      await sendPasswordResetEmail(auth, targetEmail /*, actionCodeSettings */)
+      setResetMsg(`Enviamos um email para ${targetEmail} com instruções para redefinir sua senha (Cheque o Spam!).`)
+    } catch (err) {
+      setError(getErrorMessage(err.code))
     }
   }
 
@@ -94,7 +117,9 @@ const Login = ({ onLoginSuccess }) => {
               <p className="text-sm text-gray-600">Technology Readiness Level</p>
             </div>
             <div className="text-right">
-              <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full font-medium">Avaliação de Maturidade Tecnológica</span>
+              <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full font-medium">
+                Avaliação de Maturidade Tecnológica
+              </span>
             </div>
           </div>
         </div>
@@ -128,25 +153,39 @@ const Login = ({ onLoginSuccess }) => {
                   />
                 </div>
 
-                <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                    Senha
-                  </label>
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                    placeholder="••••••••"
-                  />
-                </div>
+                {!isRegistering && (
+                  <div>
+                    <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                      Senha
+                    </label>
+                    <input
+                      id="password"
+                      name="password"
+                      type="password"
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      placeholder="••••••••"
+                    />
+                    <div className="mt-2 text-right">
+                      <button
+                        type="button"
+                        onClick={handleResetPassword}
+                        className="text-sm text-blue-600 hover:text-blue-500 cursor-pointer"
+                      >
+                        Esqueci minha senha
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {error && (
                 <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">{error}</div>
+              )}
+              {resetMsg && (
+                <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">{resetMsg}</div>
               )}
 
               <div>
@@ -162,7 +201,11 @@ const Login = ({ onLoginSuccess }) => {
               <div className="text-center">
                 <button
                   type="button"
-                  onClick={() => setIsRegistering(!isRegistering)}
+                  onClick={() => {
+                    setIsRegistering(!isRegistering)
+                    setError("")
+                    setResetMsg("")
+                  }}
                   className="text-blue-600 hover:text-blue-500 text-sm cursor-pointer transition-colors duration-200"
                 >
                   {isRegistering ? "Já tem conta? Faça login" : "Não tem conta? Registre-se"}
