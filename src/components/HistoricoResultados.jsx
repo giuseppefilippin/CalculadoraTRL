@@ -2,7 +2,16 @@
 
 import { useState, useEffect, useRef } from "react"
 import { db, auth } from "../firebase"
-import { collection, query, where, orderBy, onSnapshot, doc, getDoc } from "firebase/firestore"
+import {
+  collection,
+  query,
+  where,
+  orderBy,
+  onSnapshot,
+  doc,
+  getDoc,
+  deleteDoc,
+} from "firebase/firestore"
 import { onAuthStateChanged } from "firebase/auth"
 
 export default function HistoricoResultados({ setCurrentPage, setDadosPreenchidos, setCurrentStep, setAnswersPreenchidas }) {
@@ -11,6 +20,7 @@ export default function HistoricoResultados({ setCurrentPage, setDadosPreenchido
   const [user, setUser] = useState(null)
   const [refreshing, setRefreshing] = useState(false)
   const [expandedDiagnostic, setExpandedDiagnostic] = useState(null)
+  const [deletingId, setDeletingId] = useState(null)
   const snapRef = useRef(null)
   const authRef = useRef(null)
 
@@ -164,26 +174,26 @@ export default function HistoricoResultados({ setCurrentPage, setDadosPreenchido
 
         // Preparar dados para pré-preenchimento
         const dadosParaPreenchimento = {
-        nomeTecnologia: data.nomeTecnologia ?? "",
-        produto: data.produto ?? "",
-        status: data.status ?? "Proposto",
-        empresa: data.empresa ?? "",
-        nomeResponsavel: data.nomeResponsavel ?? "",
-        // ATENÇÃO aos nomes esperados pelo Step1:
-        trlInicial: data.trlInicial ?? "",
-        trlFinal: (data.trlFinal ?? data.trlDesejado) ?? "",
-        ambienteRelevante: data.ambienteRelevante ?? "",
-        ambienteOperacional: data.ambienteOperacional ?? "",
-        areasSelecionadas: Array.isArray(data.areasSelecionadas) ? data.areasSelecionadas : [],
-        isReavaliacao: true,
-        avaliacaoOriginalId: resultadoId,
-      };
+          nomeTecnologia: data.nomeTecnologia ?? "",
+          produto: data.produto ?? "",
+          status: data.status ?? "Proposto",
+          empresa: data.empresa ?? "",
+          nomeResponsavel: data.nomeResponsavel ?? "",
+          // ATENÇÃO aos nomes esperados pelo Step1:
+          trlInicial: data.trlInicial ?? "",
+          trlFinal: (data.trlFinal ?? data.trlDesejado) ?? "",
+          ambienteRelevante: data.ambienteRelevante ?? "",
+          ambienteOperacional: data.ambienteOperacional ?? "",
+          areasSelecionadas: Array.isArray(data.areasSelecionadas) ? data.areasSelecionadas : [],
+          isReavaliacao: true,
+          avaliacaoOriginalId: resultadoId,
+        }
 
         // Passar dados para o componente pai
-      setDadosPreenchidos?.(dadosParaPreenchimento);
-      setAnswersPreenchidas({respostasPorNivel: data.respostasPorNivel || null,});
-      setCurrentPage?.("home");
-      setCurrentStep?.(1);
+        setDadosPreenchidos?.(dadosParaPreenchimento)
+        setAnswersPreenchidas({ respostasPorNivel: data.respostasPorNivel || null })
+        setCurrentPage?.("home")
+        setCurrentStep?.(1)
       } else {
         console.error("Avaliação não encontrada")
         alert("Erro ao carregar dados da avaliação. Tente novamente.")
@@ -191,6 +201,24 @@ export default function HistoricoResultados({ setCurrentPage, setDadosPreenchido
     } catch (error) {
       console.error("Erro ao buscar dados da avaliação:", error)
       alert("Erro ao carregar dados da avaliação. Tente novamente.")
+    }
+  }
+
+  const handleDelete = async (resultadoId, nomeProjeto) => {
+    const confirmado = window.confirm(
+      `Excluir a avaliação "${nomeProjeto || "Projeto sem nome"}"?\nEssa ação não pode ser desfeita.`,
+    )
+    if (!confirmado) return
+
+    try {
+      setDeletingId(resultadoId)
+      await deleteDoc(doc(db, "avaliacoes_trl", resultadoId))
+      // O onSnapshot atualizará a UI automaticamente
+    } catch (err) {
+      console.error("Erro ao deletar avaliação:", err)
+      alert("Não foi possível excluir. Tente novamente.")
+    } finally {
+      setDeletingId(null)
     }
   }
 
@@ -237,12 +265,10 @@ export default function HistoricoResultados({ setCurrentPage, setDadosPreenchido
         </div>
         <div className="mt-4 p-3 bg-blue-50 rounded border-l-4 border-blue-400">
           <p className="text-sm text-blue-800">
-            <strong>Resultado:</strong> Sua tecnologia atingiu o TRL {resultado.trlFinal} de {resultado.trlDesejado}{" "}
-            desejado.
+            <strong>Resultado:</strong> Sua tecnologia atingiu o TRL {resultado.trlFinal} de {resultado.trlDesejado} desejado.
             {resultado.trlFinal < resultado.trlDesejado && (
               <span className="block mt-1">
-                Para atingir o TRL {resultado.trlDesejado}, você precisa avançar{" "}
-                {resultado.trlDesejado - resultado.trlFinal} nível(is).
+                Para atingir o TRL {resultado.trlDesejado}, você precisa avançar {resultado.trlDesejado - resultado.trlFinal} nível(is).
               </span>
             )}
           </p>
@@ -320,13 +346,37 @@ export default function HistoricoResultados({ setCurrentPage, setDadosPreenchido
               {resultados.map((resultado) => (
                 <div key={resultado.id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
                   <div className="flex justify-between items-start mb-3">
-                    <div>
+                    <div className="pr-4">
                       <h3 className="font-semibold text-gray-900">{resultado.nomeProjeto}</h3>
                       <p className="text-sm text-gray-600">{resultado.descricaoProjeto}</p>
                     </div>
-                    <div className="text-right">
-                      <div className="text-sm text-gray-500">{formatarData(resultado.dataAvaliacao)}</div>
-                      <div className="text-lg font-bold text-blue-600">TRL {resultado.trlFinal}</div>
+                    <div className="flex items-start gap-3">
+                      <div className="text-right">
+                        <div className="text-sm text-gray-500">{formatarData(resultado.dataAvaliacao)}</div>
+                        <div className="text-lg font-bold text-blue-600">TRL {resultado.trlFinal}</div>
+                      </div>
+                      <button
+                        onClick={() => handleDelete(resultado.id, resultado.nomeProjeto)}
+                        disabled={deletingId === resultado.id}
+                        className={`inline-flex items-center justify-center w-9 h-9 rounded-md border transition-colors cursor-pointer ${
+                          deletingId === resultado.id
+                            ? "bg-red-100 border-red-200 opacity-70"
+                            : "bg-white hover:bg-red-50 border-red-200"
+                        }`}
+                        title="Excluir avaliação"
+                        aria-label="Excluir avaliação"
+                      >
+                        {deletingId === resultado.id ? (
+                          <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" className="opacity-25" />
+                            <path d="M4 12a8 8 0 018-8" stroke="currentColor" strokeWidth="4" className="opacity-75" />
+                          </svg>
+                        ) : (
+                          <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8 7h8m-1-2a2 2 0 00-2-2h-2a2 2 0 00-2 2v2" />
+                          </svg>
+                        )}
+                      </button>
                     </div>
                   </div>
 
@@ -366,7 +416,7 @@ export default function HistoricoResultados({ setCurrentPage, setDadosPreenchido
                     </div>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-gray-200">
+                  <div className="mt-4 pt-3 border-t border-gray-200 flex items-center gap-3">
                     <button
                       onClick={() => handleRedoEvaluation(resultado.id)}
                       className="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 cursor-pointer transition-colors"
@@ -381,6 +431,10 @@ export default function HistoricoResultados({ setCurrentPage, setDadosPreenchido
                       </svg>
                       Refazer Avaliação
                     </button>
+
+                    {refreshing && (
+                      <span className="text-sm text-gray-500">Atualizando…</span>
+                    )}
                   </div>
 
                   {expandedDiagnostic === resultado.id && renderDiagnosticDetails(resultado)}
